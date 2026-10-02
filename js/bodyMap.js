@@ -18,10 +18,11 @@ class BodyMapManager {
     this.renderDogMap();
     this.attachEvents();
     this.setupViewControls();
+    this.updateVisualSelection();
   }
 
   setRegions(regions = []) {
-    this.selectedRegions = new Set(regions);
+    this.selectedRegions = new Set(regions || []);
     this.updateVisualSelection();
     if (this.onSelectionChange) {
       this.onSelectionChange(Array.from(this.selectedRegions));
@@ -37,11 +38,18 @@ class BodyMapManager {
   }
 
   toggleRegion(regionId) {
+    if (!regionId) return;
     if (this.selectedRegions.has(regionId)) {
       this.selectedRegions.delete(regionId);
     } else {
       this.selectedRegions.add(regionId);
     }
+    
+    // Haptic feedback if supported
+    if (navigator.vibrate) {
+      navigator.vibrate(25);
+    }
+
     this.updateVisualSelection();
     if (this.onSelectionChange) {
       this.onSelectionChange(Array.from(this.selectedRegions));
@@ -169,36 +177,61 @@ class BodyMapManager {
   }
 
   attachEvents() {
-    // Delegated click & hover for clickable anatomical parts
-    document.querySelectorAll('.body-part-clickable').forEach(el => {
-      el.addEventListener('click', (e) => {
+    // Robust Global Event Delegation for Clicks & Touches
+    const handleElementClick = (e) => {
+      const part = e.target.closest('.body-part-clickable');
+      if (part) {
+        e.preventDefault();
         e.stopPropagation();
-        const region = el.getAttribute('data-region');
+        const region = part.getAttribute('data-region');
         if (region) this.toggleRegion(region);
-      });
+        return;
+      }
 
-      el.addEventListener('mouseenter', () => {
-        const region = el.getAttribute('data-region');
+      const quickChip = e.target.closest('.body-quick-chip');
+      if (quickChip) {
+        e.preventDefault();
+        e.stopPropagation();
+        const region = quickChip.getAttribute('data-region');
+        if (region) this.toggleRegion(region);
+        return;
+      }
+
+      const removeBtn = e.target.closest('.remove-region-btn');
+      if (removeBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const region = removeBtn.getAttribute('data-remove');
+        if (region) this.toggleRegion(region);
+        return;
+      }
+    };
+
+    document.addEventListener('click', handleElementClick);
+
+    // Hover listeners
+    document.addEventListener('mouseover', (e) => {
+      const part = e.target.closest('.body-part-clickable');
+      if (part) {
+        const region = part.getAttribute('data-region');
         this.showHoverLabel(this.getRegionDisplayName(region));
-      });
+      }
+    });
 
-      el.addEventListener('mouseleave', () => {
+    document.addEventListener('mouseout', (e) => {
+      const part = e.target.closest('.body-part-clickable');
+      if (part) {
         this.clearHoverLabel();
-      });
+      }
     });
 
     const btnClear = document.getElementById('btnClearBodyMap');
     if (btnClear) {
-      btnClear.addEventListener('click', () => this.clear());
-    }
-
-    // Connect body quick preset chips
-    document.querySelectorAll('.body-quick-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        const region = chip.getAttribute('data-region');
-        if (region) this.toggleRegion(region);
+      btnClear.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.clear();
       });
-    });
+    }
   }
 
   setupViewControls() {
@@ -262,12 +295,26 @@ class BodyMapManager {
   }
 
   updateVisualSelection() {
+    // Update SVG elements directly with class and direct inline attributes
     document.querySelectorAll('.body-part-clickable').forEach(el => {
       const regionId = el.getAttribute('data-region');
-      if (this.selectedRegions.has(regionId)) {
+      const isSelected = this.selectedRegions.has(regionId);
+      const isDog = el.closest('.interactive-dog') !== null;
+
+      if (isSelected) {
         el.classList.add('active');
+        const activeFill = isDog ? '#f59e0b' : '#ef4444';
+        const activeStroke = isDog ? '#fef3c7' : '#fee2e2';
+        el.style.fill = activeFill;
+        el.style.stroke = activeStroke;
+        el.style.strokeWidth = '2.5px';
+        el.style.filter = `drop-shadow(0 0 10px ${isDog ? 'rgba(245, 158, 11, 0.9)' : 'rgba(239, 68, 68, 0.9)'})`;
       } else {
         el.classList.remove('active');
+        el.style.fill = '';
+        el.style.stroke = '';
+        el.style.strokeWidth = '';
+        el.style.filter = '';
       }
     });
 
@@ -284,13 +331,6 @@ class BodyMapManager {
             <button type="button" class="remove-region-btn" data-remove="${r}" style="background:none;border:none;color:inherit;cursor:pointer;margin-left:4px;font-size:12px;font-weight:bold;">×</button>
           </span>
         `).join('');
-
-        tagsContainer.querySelectorAll('.remove-region-btn').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.toggleRegion(btn.getAttribute('data-remove'));
-          });
-        });
       }
     }
   }
@@ -303,9 +343,9 @@ class BodyMapManager {
     const container = document.getElementById('humanBodyFront');
     if (!container) return;
     container.innerHTML = `
-      <svg viewBox="0 0 320 640" xmlns="http://www.w3.org/2000/svg" class="anatomical-svg">
-        <!-- Background Grid & Body Silhouette Aura -->
-        <g class="body-background-lines" opacity="0.15">
+      <svg viewBox="0 0 320 640" xmlns="http://www.w3.org/2000/svg" class="anatomical-svg" style="cursor:pointer; pointer-events:auto;">
+        <!-- Background Grid & Body Silhouette Aura (Non-interactive) -->
+        <g class="body-background-lines" opacity="0.15" pointer-events="none" style="pointer-events:none;">
           <line x1="160" y1="10" x2="160" y2="630" stroke="#38bdf8" stroke-dasharray="4 4" stroke-width="1.5"/>
           <line x1="40" y1="200" x2="280" y2="200" stroke="#38bdf8" stroke-dasharray="2 4" stroke-width="1"/>
           <line x1="60" y1="360" x2="260" y2="360" stroke="#38bdf8" stroke-dasharray="2 4" stroke-width="1"/>
@@ -386,7 +426,6 @@ class BodyMapManager {
         <rect x="182" y="324" width="40" height="98" rx="15" class="body-part-clickable" data-region="oberschenkel_re_v" title="Oberschenkel Rechts"/>
 
         <!-- Kneecaps / Patella & Meniscus (Big clickable target) -->
-        <!-- Outer / Inner Meniscus markers -->
         <path d="M 98,426 L 112,426 L 110,458 L 96,458 Z" class="body-part-clickable" data-region="knie_aussen_li" title="Knie-Außenseite Links"/>
         <ellipse cx="118" cy="442" rx="15" ry="14" class="body-part-clickable" data-region="patella_li" title="Kniescheibe / Knie Links"/>
         <path d="M 126,426 L 140,426 L 140,458 L 126,458 Z" class="body-part-clickable" data-region="knie_innen_li" title="Knie-Innenseite / Innenmeniskus Links"/>
@@ -418,9 +457,9 @@ class BodyMapManager {
     const container = document.getElementById('humanBodyBack');
     if (!container) return;
     container.innerHTML = `
-      <svg viewBox="0 0 320 640" xmlns="http://www.w3.org/2000/svg" class="anatomical-svg">
-        <!-- Background Grid -->
-        <g class="body-background-lines" opacity="0.15">
+      <svg viewBox="0 0 320 640" xmlns="http://www.w3.org/2000/svg" class="anatomical-svg" style="cursor:pointer; pointer-events:auto;">
+        <!-- Background Grid (Non-interactive) -->
+        <g class="body-background-lines" opacity="0.15" pointer-events="none" style="pointer-events:none;">
           <line x1="160" y1="10" x2="160" y2="630" stroke="#38bdf8" stroke-dasharray="4 4" stroke-width="1.5"/>
           <line x1="40" y1="200" x2="280" y2="200" stroke="#38bdf8" stroke-dasharray="2 4" stroke-width="1"/>
           <line x1="60" y1="360" x2="260" y2="360" stroke="#38bdf8" stroke-dasharray="2 4" stroke-width="1"/>
@@ -516,9 +555,9 @@ class BodyMapManager {
     const container = document.getElementById('dogBodyMap');
     if (!container) return;
     container.innerHTML = `
-      <svg viewBox="0 0 640 380" xmlns="http://www.w3.org/2000/svg" class="anatomical-svg dog-svg">
-        <!-- Background Grid -->
-        <g class="body-background-lines" opacity="0.12">
+      <svg viewBox="0 0 640 380" xmlns="http://www.w3.org/2000/svg" class="anatomical-svg dog-svg" style="cursor:pointer; pointer-events:auto;">
+        <!-- Background Grid (Non-interactive) -->
+        <g class="body-background-lines" opacity="0.12" pointer-events="none" style="pointer-events:none;">
           <line x1="30" y1="190" x2="610" y2="190" stroke="#f59e0b" stroke-dasharray="4 4" stroke-width="1.5"/>
           <line x1="260" y1="20" x2="260" y2="360" stroke="#f59e0b" stroke-dasharray="2 4" stroke-width="1"/>
           <line x1="480" y1="20" x2="480" y2="360" stroke="#f59e0b" stroke-dasharray="2 4" stroke-width="1"/>
