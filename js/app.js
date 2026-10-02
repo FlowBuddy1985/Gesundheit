@@ -699,11 +699,6 @@ class SymptomApp {
 
     if (!entry) return;
 
-  populateFormWithEntry(entry) {
-    this.resetFormToDefaults();
-
-    if (!entry) return;
-
     // Separate Pain Sliders (Knochen/Gelenke & Haut/Dermatologie)
     const jointsVal = entry.painJointsIntensity !== undefined ? entry.painJointsIntensity : (entry.painIntensity !== undefined ? entry.painIntensity : 0);
     const skinVal = entry.painSkinIntensity !== undefined ? entry.painSkinIntensity : (entry.skinItch !== undefined ? entry.skinItch : 0);

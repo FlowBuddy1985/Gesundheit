@@ -1,7 +1,7 @@
 /**
- * Detailed Interactive Body Map Engine for Human and Dog Anatomies
- * High-Resolution anatomical vectors, touch-friendly segmentation,
- * real-time hover feedback, view switching, and large-scale rendering.
+ * Interactive Anatomical Body Map Engine (Human & Canine)
+ * Clean, high-resolution organic anatomy vectors, large touch-targets,
+ * multi-view switcher, live hover/tap feedback, and region synchronization.
  */
 
 class BodyMapManager {
@@ -44,8 +44,7 @@ class BodyMapManager {
     } else {
       this.selectedRegions.add(regionId);
     }
-    
-    // Haptic feedback if supported
+
     if (navigator.vibrate) {
       navigator.vibrate(25);
     }
@@ -149,8 +148,6 @@ class BodyMapManager {
       'achilles_re': 'Achillessehne rechts',
       'ferse_li': 'Ferse & Fersensporn links',
       'ferse_re': 'Ferse & Fersensporn rechts',
-      'sohle_li': 'Fußsohle / Plantarfaszie links',
-      'sohle_re': 'Fußsohle / Plantarfaszie rechts',
       'ganzkoerper_haut': 'Ganzkörper Haut / Ekzem / Juckreiz',
 
       // Dog Anatomy (Buddy, Milla, Bella)
@@ -177,7 +174,7 @@ class BodyMapManager {
   }
 
   attachEvents() {
-    // Robust Global Event Delegation for Clicks & Touches
+    // Delegated click and touch event listeners
     const handleElementClick = (e) => {
       const part = e.target.closest('.body-part-clickable');
       if (part) {
@@ -209,7 +206,7 @@ class BodyMapManager {
 
     document.addEventListener('click', handleElementClick);
 
-    // Hover listeners
+    // Hover feedback
     document.addEventListener('mouseover', (e) => {
       const part = e.target.closest('.body-part-clickable');
       if (part) {
@@ -295,7 +292,6 @@ class BodyMapManager {
   }
 
   updateVisualSelection() {
-    // Update SVG elements directly with class and direct inline attributes
     document.querySelectorAll('.body-part-clickable').forEach(el => {
       const regionId = el.getAttribute('data-region');
       const isSelected = this.selectedRegions.has(regionId);
@@ -307,7 +303,7 @@ class BodyMapManager {
         const activeStroke = isDog ? '#fef3c7' : '#fee2e2';
         el.style.fill = activeFill;
         el.style.stroke = activeStroke;
-        el.style.strokeWidth = '2.5px';
+        el.style.strokeWidth = '2px';
         el.style.filter = `drop-shadow(0 0 10px ${isDog ? 'rgba(245, 158, 11, 0.9)' : 'rgba(239, 68, 68, 0.9)'})`;
       } else {
         el.classList.remove('active');
@@ -336,286 +332,246 @@ class BodyMapManager {
   }
 
   // =========================================================================
-  // High-Resolution Large-Scale Detailed Human Anatomy (Front View)
-  // ViewBox: 0 0 320 640
+  // Clean, High-Resolution Human Anatomy (Front View)
+  // ViewBox: 0 0 260 520
   // =========================================================================
   renderHumanFront() {
     const container = document.getElementById('humanBodyFront');
     if (!container) return;
     container.innerHTML = `
-      <svg viewBox="0 0 320 640" xmlns="http://www.w3.org/2000/svg" class="anatomical-svg" style="cursor:pointer; pointer-events:auto;">
-        <!-- Background Grid & Body Silhouette Aura (Non-interactive) -->
-        <g class="body-background-lines" opacity="0.15" pointer-events="none" style="pointer-events:none;">
-          <line x1="160" y1="10" x2="160" y2="630" stroke="#38bdf8" stroke-dasharray="4 4" stroke-width="1.5"/>
-          <line x1="40" y1="200" x2="280" y2="200" stroke="#38bdf8" stroke-dasharray="2 4" stroke-width="1"/>
-          <line x1="60" y1="360" x2="260" y2="360" stroke="#38bdf8" stroke-dasharray="2 4" stroke-width="1"/>
-          <line x1="80" y1="510" x2="240" y2="510" stroke="#38bdf8" stroke-dasharray="2 4" stroke-width="1"/>
-        </g>
+      <svg viewBox="0 0 260 520" xmlns="http://www.w3.org/2000/svg" class="anatomical-svg" style="cursor:pointer; pointer-events:auto;">
+        <!-- Background guide line -->
+        <line x1="130" y1="10" x2="130" y2="510" stroke="#38bdf8" stroke-dasharray="4 4" stroke-width="1" opacity="0.15" pointer-events="none"/>
 
         <!-- HEAD & NECK -->
         <!-- Forehead & Temples -->
-        <path d="M 132,22 C 132,8 188,8 188,22 C 188,42 132,42 132,22 Z" class="body-part-clickable" data-region="kopf_stirn" title="Stirn & Schläfen"/>
+        <path d="M 108,24 C 108,10 152,10 152,24 C 152,40 108,40 108,24 Z" class="body-part-clickable" data-region="kopf_stirn" title="Stirn & Schläfen"/>
         
-        <!-- Eyes, Cheeks & Face -->
-        <path d="M 134,42 C 134,42 186,42 186,42 C 186,64 134,64 134,42 Z" class="body-part-clickable" data-region="gesicht_wangen" title="Gesicht & Augen"/>
+        <!-- Face & Eyes -->
+        <path d="M 110,40 C 110,40 150,40 150,40 C 150,56 110,56 110,40 Z" class="body-part-clickable" data-region="gesicht_wangen" title="Gesicht & Augen"/>
         
         <!-- Jaw & TMJ -->
-        <path d="M 138,64 L 182,64 L 174,82 L 146,82 Z" class="body-part-clickable" data-region="kiefer" title="Kiefer & Kiefergelenk"/>
+        <path d="M 114,56 L 146,56 L 140,70 L 120,70 Z" class="body-part-clickable" data-region="kiefer" title="Kiefer & Kiefergelenk"/>
 
-        <!-- Throat & Neck Front -->
-        <path d="M 148,82 L 172,82 L 174,106 L 146,106 Z" class="body-part-clickable" data-region="hals_v" title="Hals vorn / Kehlkopf"/>
+        <!-- Neck Front / Throat -->
+        <path d="M 120,70 L 140,70 L 142,88 L 118,88 Z" class="body-part-clickable" data-region="hals_v" title="Hals vorn / Kehlkopf"/>
 
         <!-- SHOULDERS & CLAVICLES -->
-        <!-- Clavicles (Schlüsselbeine) -->
-        <path d="M 102,104 L 146,106 L 144,116 L 100,113 Z" class="body-part-clickable" data-region="clavicula_li" title="Schlüsselbein Links"/>
-        <path d="M 174,106 L 218,104 L 220,113 L 176,116 Z" class="body-part-clickable" data-region="clavicula_re" title="Schlüsselbein Rechts"/>
+        <path d="M 86,86 L 118,88 L 116,96 L 84,93 Z" class="body-part-clickable" data-region="clavicula_li" title="Schlüsselbein Links"/>
+        <path d="M 142,88 L 174,86 L 176,93 L 144,96 Z" class="body-part-clickable" data-region="clavicula_re" title="Schlüsselbein Rechts"/>
 
-        <!-- Deltoid / Shoulders Front -->
-        <path d="M 76,116 C 62,130 62,156 76,170 C 94,170 102,148 100,116 Z" class="body-part-clickable" data-region="schulter_li_v" title="Schulter Links"/>
-        <path d="M 244,116 C 258,130 258,156 244,170 C 226,170 218,148 220,116 Z" class="body-part-clickable" data-region="schulter_re_v" title="Schulter Rechts"/>
+        <!-- Shoulders Front (Deltoideus) -->
+        <ellipse cx="74" cy="106" rx="15" ry="13" class="body-part-clickable" data-region="schulter_li_v" title="Schulter Links"/>
+        <ellipse cx="186" cy="106" rx="15" ry="13" class="body-part-clickable" data-region="schulter_re_v" title="Schulter Rechts"/>
 
         <!-- CHEST & STERNUM -->
-        <!-- Sternum (Brustbein) -->
-        <path d="M 154,106 L 166,106 L 164,180 L 156,180 Z" class="body-part-clickable" data-region="sternum" title="Brustbein (Sternum)"/>
-        <!-- Pectoralis Left -->
-        <path d="M 104,116 L 154,116 L 154,178 L 102,168 Z" class="body-part-clickable" data-region="brust_li" title="Brustkorb Links"/>
-        <!-- Pectoralis Right -->
-        <path d="M 166,116 L 216,116 L 218,168 L 166,178 Z" class="body-part-clickable" data-region="brust_re" title="Brustkorb Rechts"/>
+        <path d="M 124,88 L 136,88 L 134,148 L 126,148 Z" class="body-part-clickable" data-region="sternum" title="Brustbein (Sternum)"/>
+        <path d="M 88,96 L 124,96 L 124,146 L 86,138 Z" class="body-part-clickable" data-region="brust_li" title="Brustkorb Links"/>
+        <path d="M 136,96 L 172,96 L 174,138 L 136,146 Z" class="body-part-clickable" data-region="brust_re" title="Brustkorb Rechts"/>
 
         <!-- ARMS FRONT -->
-        <!-- Upper Arm / Biceps -->
-        <rect x="62" y="170" width="28" height="66" rx="10" class="body-part-clickable" data-region="oberarm_li" title="Oberarm Links"/>
-        <rect x="230" y="170" width="28" height="66" rx="10" class="body-part-clickable" data-region="oberarm_re" title="Oberarm Rechts"/>
+        <rect x="56" y="122" width="22" height="52" rx="8" class="body-part-clickable" data-region="oberarm_li" title="Oberarm Links"/>
+        <rect x="182" y="122" width="22" height="52" rx="8" class="body-part-clickable" data-region="oberarm_re" title="Oberarm Rechts"/>
 
-        <!-- Elbow Crease / Joint -->
-        <ellipse cx="76" cy="246" rx="14" ry="11" class="body-part-clickable" data-region="ellbogen_li" title="Ellbogen Links"/>
-        <ellipse cx="244" cy="246" rx="14" ry="11" class="body-part-clickable" data-region="ellbogen_re" title="Ellbogen Rechts"/>
+        <ellipse cx="67" cy="180" rx="11" ry="9" class="body-part-clickable" data-region="ellbogen_li" title="Ellbogen Links"/>
+        <ellipse cx="193" cy="180" rx="11" ry="9" class="body-part-clickable" data-region="ellbogen_re" title="Ellbogen Rechts"/>
 
-        <!-- Forearm Front -->
-        <rect x="64" y="258" width="24" height="68" rx="9" class="body-part-clickable" data-region="unterarm_li" title="Unterarm Links"/>
-        <rect x="232" y="258" width="24" height="68" rx="9" class="body-part-clickable" data-region="unterarm_re" title="Unterarm Rechts"/>
+        <rect x="56" y="190" width="20" height="54" rx="7" class="body-part-clickable" data-region="unterarm_li" title="Unterarm Links"/>
+        <rect x="184" y="190" width="20" height="54" rx="7" class="body-part-clickable" data-region="unterarm_re" title="Unterarm Rechts"/>
 
-        <!-- Wrist Joint -->
-        <ellipse cx="76" cy="334" rx="12" ry="8" class="body-part-clickable" data-region="handgelenk_li" title="Handgelenk Links"/>
-        <ellipse cx="244" cy="334" rx="12" ry="8" class="body-part-clickable" data-region="handgelenk_re" title="Handgelenk Rechts"/>
+        <ellipse cx="66" cy="249" rx="9" ry="7" class="body-part-clickable" data-region="handgelenk_li" title="Handgelenk Links"/>
+        <ellipse cx="194" cy="249" rx="9" ry="7" class="body-part-clickable" data-region="handgelenk_re" title="Handgelenk Rechts"/>
 
-        <!-- Hand & Fingers -->
-        <path d="M 64,342 C 60,360 60,375 74,385 C 88,385 88,360 86,342 Z" class="body-part-clickable" data-region="hand_li" title="Hand & Finger Links"/>
-        <path d="M 256,342 C 260,360 260,375 246,385 C 232,385 232,360 234,342 Z" class="body-part-clickable" data-region="hand_re" title="Hand & Finger Rechts"/>
+        <path d="M 57,256 C 53,270 53,282 66,290 C 78,290 78,270 76,256 Z" class="body-part-clickable" data-region="hand_li" title="Hand & Finger Links"/>
+        <path d="M 203,256 C 207,270 207,282 194,290 C 182,290 182,270 184,256 Z" class="body-part-clickable" data-region="hand_re" title="Hand & Finger Rechts"/>
 
         <!-- ABDOMEN & TORSO -->
-        <!-- Upper Abdomen / Rib Margin -->
-        <path d="M 102,170 L 154,180 L 154,218 L 106,218 Z" class="body-part-clickable" data-region="oberbauch_li" title="Oberbauch Links"/>
-        <path d="M 166,180 L 218,170 L 214,218 L 166,218 Z" class="body-part-clickable" data-region="oberbauch_re" title="Oberbauch Rechts"/>
+        <path d="M 86,140 L 124,148 L 124,175 L 90,175 Z" class="body-part-clickable" data-region="oberbauch_li" title="Oberbauch Links"/>
+        <path d="M 136,148 L 174,140 L 170,175 L 136,175 Z" class="body-part-clickable" data-region="oberbauch_re" title="Oberbauch Rechts"/>
 
-        <!-- Mid Abdomen / Navel -->
-        <path d="M 108,220 L 212,220 L 206,264 L 114,264 Z" class="body-part-clickable" data-region="bauch_mitte" title="Bauchmitte / Bauchnabel"/>
+        <path d="M 90,177 L 170,177 L 166,210 L 94,210 Z" class="body-part-clickable" data-region="bauch_mitte" title="Bauchmitte / Bauchnabel"/>
 
-        <!-- Lower Abdomen / Bladder Area -->
-        <path d="M 114,266 L 206,266 L 198,302 L 122,302 Z" class="body-part-clickable" data-region="unterbauch" title="Unterbauch"/>
+        <path d="M 94,212 L 166,212 L 160,240 L 100,240 Z" class="body-part-clickable" data-region="unterbauch" title="Unterbauch"/>
 
-        <!-- HIPS & PELVIS (LARGE & DETAILED) -->
-        <!-- Left Hip Joint / Groin -->
-        <path d="M 102,280 L 148,302 L 138,338 L 94,314 Z" class="body-part-clickable" data-region="huefte_li_v" title="Hüfte Links vorn"/>
-        <!-- Right Hip Joint / Groin -->
-        <path d="M 172,302 L 218,280 L 226,314 L 182,338 Z" class="body-part-clickable" data-region="huefte_re_v" title="Hüfte Rechts vorn"/>
+        <!-- HIPS & PELVIS -->
+        <path d="M 90,222 L 124,240 L 116,268 L 84,250 Z" class="body-part-clickable" data-region="huefte_li_v" title="Hüfte Links vorn"/>
+        <path d="M 136,240 L 170,222 L 176,250 L 144,268 Z" class="body-part-clickable" data-region="huefte_re_v" title="Hüfte Rechts vorn"/>
 
         <!-- LEGS & KNEES FRONT -->
-        <!-- Thigh / Quadriceps -->
-        <rect x="98" y="324" width="40" height="98" rx="15" class="body-part-clickable" data-region="oberschenkel_li_v" title="Oberschenkel Links"/>
-        <rect x="182" y="324" width="40" height="98" rx="15" class="body-part-clickable" data-region="oberschenkel_re_v" title="Oberschenkel Rechts"/>
+        <rect x="82" y="256" width="32" height="80" rx="12" class="body-part-clickable" data-region="oberschenkel_li_v" title="Oberschenkel Links"/>
+        <rect x="146" y="256" width="32" height="80" rx="12" class="body-part-clickable" data-region="oberschenkel_re_v" title="Oberschenkel Rechts"/>
 
-        <!-- Kneecaps / Patella & Meniscus (Big clickable target) -->
-        <path d="M 98,426 L 112,426 L 110,458 L 96,458 Z" class="body-part-clickable" data-region="knie_aussen_li" title="Knie-Außenseite Links"/>
-        <ellipse cx="118" cy="442" rx="15" ry="14" class="body-part-clickable" data-region="patella_li" title="Kniescheibe / Knie Links"/>
-        <path d="M 126,426 L 140,426 L 140,458 L 126,458 Z" class="body-part-clickable" data-region="knie_innen_li" title="Knie-Innenseite / Innenmeniskus Links"/>
+        <!-- Kneecaps / Patella & Meniscus -->
+        <ellipse cx="98" cy="344" rx="13" ry="12" class="body-part-clickable" data-region="patella_li" title="Kniescheibe / Knie Links"/>
+        <path d="M 106,336 L 116,336 L 116,354 L 106,354 Z" class="body-part-clickable" data-region="knie_innen_li" title="Innenmeniskus Links"/>
 
-        <path d="M 180,426 L 194,426 L 194,458 L 180,458 Z" class="body-part-clickable" data-region="knie_innen_re" title="Knie-Innenseite / Innenmeniskus Rechts"/>
-        <ellipse cx="202" cy="442" rx="15" ry="14" class="body-part-clickable" data-region="patella_re" title="Kniescheibe / Knie Rechts"/>
-        <path d="M 208,426 L 222,426 L 224,458 L 210,458 Z" class="body-part-clickable" data-region="knie_aussen_re" title="Knie-Außenseite Rechts"/>
+        <path d="M 144,336 L 154,336 L 154,354 L 144,354 Z" class="body-part-clickable" data-region="knie_innen_re" title="Innenmeniskus Rechts"/>
+        <ellipse cx="162" cy="344" rx="13" ry="12" class="body-part-clickable" data-region="patella_re" title="Kniescheibe / Knie Rechts"/>
 
-        <!-- Lower Leg / Shin (Schienbein) -->
-        <rect x="104" y="462" width="30" height="98" rx="11" class="body-part-clickable" data-region="schienbein_li" title="Schienbein Links"/>
-        <rect x="186" y="462" width="30" height="98" rx="11" class="body-part-clickable" data-region="schienbein_re" title="Schienbein Rechts"/>
+        <!-- Lower Leg / Shin -->
+        <rect x="86" y="360" width="24" height="78" rx="9" class="body-part-clickable" data-region="schienbein_li" title="Schienbein Links"/>
+        <rect x="150" y="360" width="24" height="78" rx="9" class="body-part-clickable" data-region="schienbein_re" title="Schienbein Rechts"/>
 
-        <!-- Ankle Joint (Sprunggelenk) -->
-        <ellipse cx="119" cy="570" rx="14" ry="10" class="body-part-clickable" data-region="sprunggelenk_li" title="Sprunggelenk / Knöchel Links"/>
-        <ellipse cx="201" cy="570" rx="14" ry="10" class="body-part-clickable" data-region="sprunggelenk_re" title="Sprunggelenk / Knöchel Rechts"/>
+        <!-- Ankle -->
+        <ellipse cx="98" cy="446" rx="11" ry="8" class="body-part-clickable" data-region="sprunggelenk_li" title="Sprunggelenk / Knöchel Links"/>
+        <ellipse cx="162" cy="446" rx="11" ry="8" class="body-part-clickable" data-region="sprunggelenk_re" title="Sprunggelenk / Knöchel Rechts"/>
 
-        <!-- Foot & Toes (Große Zielfläche) -->
-        <path d="M 102,582 C 102,582 136,582 136,590 C 136,616 94,616 96,590 Z" class="body-part-clickable" data-region="fuss_li" title="Fuß Links (Spann & Zehen)"/>
-        <path d="M 184,582 C 184,582 218,582 218,590 C 220,616 178,616 180,590 Z" class="body-part-clickable" data-region="fuss_re" title="Fuß Rechts (Spann & Zehen)"/>
+        <!-- Foot & Toes -->
+        <path d="M 85,455 C 85,455 113,455 113,462 C 113,480 78,480 80,462 Z" class="body-part-clickable" data-region="fuss_li" title="Fuß Links (Spann & Zehen)"/>
+        <path d="M 147,455 C 147,455 175,455 175,462 C 177,480 142,480 144,462 Z" class="body-part-clickable" data-region="fuss_re" title="Fuß Rechts (Spann & Zehen)"/>
       </svg>
     `;
   }
 
   // =========================================================================
-  // High-Resolution Large-Scale Detailed Human Anatomy (Back View)
-  // ViewBox: 0 0 320 640
+  // Clean, High-Resolution Human Anatomy (Back View)
+  // ViewBox: 0 0 260 520
   // =========================================================================
   renderHumanBack() {
     const container = document.getElementById('humanBodyBack');
     if (!container) return;
     container.innerHTML = `
-      <svg viewBox="0 0 320 640" xmlns="http://www.w3.org/2000/svg" class="anatomical-svg" style="cursor:pointer; pointer-events:auto;">
-        <!-- Background Grid (Non-interactive) -->
-        <g class="body-background-lines" opacity="0.15" pointer-events="none" style="pointer-events:none;">
-          <line x1="160" y1="10" x2="160" y2="630" stroke="#38bdf8" stroke-dasharray="4 4" stroke-width="1.5"/>
-          <line x1="40" y1="200" x2="280" y2="200" stroke="#38bdf8" stroke-dasharray="2 4" stroke-width="1"/>
-          <line x1="60" y1="360" x2="260" y2="360" stroke="#38bdf8" stroke-dasharray="2 4" stroke-width="1"/>
-          <line x1="80" y1="510" x2="240" y2="510" stroke="#38bdf8" stroke-dasharray="2 4" stroke-width="1"/>
-        </g>
+      <svg viewBox="0 0 260 520" xmlns="http://www.w3.org/2000/svg" class="anatomical-svg" style="cursor:pointer; pointer-events:auto;">
+        <!-- Background guide line -->
+        <line x1="130" y1="10" x2="130" y2="510" stroke="#38bdf8" stroke-dasharray="4 4" stroke-width="1" opacity="0.15" pointer-events="none"/>
 
         <!-- HEAD & CERVICAL SPINE (HWS) -->
-        <!-- Occiput / Back of Head -->
-        <path d="M 132,18 C 132,6 188,6 188,18 C 188,58 132,58 132,18 Z" class="body-part-clickable" data-region="hinterkopf" title="Hinterkopf / Okziput"/>
+        <path d="M 108,18 C 108,6 152,6 152,18 C 152,50 108,50 108,18 Z" class="body-part-clickable" data-region="hinterkopf" title="Hinterkopf / Okziput"/>
 
         <!-- Cervical Spine (Nacken / HWS C1-C7) -->
-        <path d="M 148,60 L 172,60 L 170,104 L 150,104 Z" class="body-part-clickable" data-region="nacken_hws" title="Nacken & HWS (C1-C7)"/>
+        <path d="M 120,52 L 140,52 L 138,86 L 122,86 Z" class="body-part-clickable" data-region="nacken_hws" title="Nacken & HWS (C1-C7)"/>
 
-        <!-- Trapezius / Neck-Shoulder Bridge -->
-        <path d="M 100,104 L 148,104 L 146,134 L 98,126 Z" class="body-part-clickable" data-region="trapez_li" title="Trapezmuskel Links"/>
-        <path d="M 172,104 L 220,104 L 222,126 L 174,134 Z" class="body-part-clickable" data-region="trapez_re" title="Trapezmuskel Rechts"/>
+        <!-- Trapezius -->
+        <path d="M 84,86 L 122,86 L 120,110 L 82,104 Z" class="body-part-clickable" data-region="trapez_li" title="Trapezmuskel Links"/>
+        <path d="M 138,86 L 176,86 L 178,104 L 140,110 Z" class="body-part-clickable" data-region="trapez_re" title="Trapezmuskel Rechts"/>
 
         <!-- Shoulders Back -->
-        <path d="M 76,116 C 62,130 62,156 76,170 C 94,170 102,148 100,116 Z" class="body-part-clickable" data-region="schulter_li_h" title="Schulter hinten Links"/>
-        <path d="M 244,116 C 258,130 258,156 244,170 C 226,170 218,148 220,116 Z" class="body-part-clickable" data-region="schulter_re_h" title="Schulter hinten Rechts"/>
+        <ellipse cx="74" cy="106" rx="15" ry="13" class="body-part-clickable" data-region="schulter_li_h" title="Schulter hinten Links"/>
+        <ellipse cx="186" cy="106" rx="15" ry="13" class="body-part-clickable" data-region="schulter_re_h" title="Schulter hinten Rechts"/>
 
         <!-- Scapula (Shoulder Blades) -->
-        <path d="M 96,128 L 146,134 L 142,192 L 92,182 Z" class="body-part-clickable" data-region="scapula_li" title="Schulterblatt Links"/>
-        <path d="M 174,134 L 224,128 L 228,182 L 178,192 Z" class="body-part-clickable" data-region="scapula_re" title="Schulterblatt Rechts"/>
+        <path d="M 80,108 L 118,112 L 114,154 L 78,148 Z" class="body-part-clickable" data-region="scapula_li" title="Schulterblatt Links"/>
+        <path d="M 142,112 L 180,108 L 182,148 L 146,154 Z" class="body-part-clickable" data-region="scapula_re" title="Schulterblatt Rechts"/>
 
-        <!-- Thoracic Spine (Brustwirbelsäule BWS Th1-Th12) -->
-        <path d="M 150,106 L 170,106 L 168,206 L 152,206 Z" class="body-part-clickable" data-region="bws_wirbelsaeule" title="Brustwirbelsäule (BWS)"/>
+        <!-- Thoracic Spine (BWS Th1-Th12) -->
+        <path d="M 122,86 L 138,86 L 136,166 L 124,166 Z" class="body-part-clickable" data-region="bws_wirbelsaeule" title="Brustwirbelsäule (BWS)"/>
 
         <!-- Ribs Back / Mid Back -->
-        <path d="M 94,186 L 150,194 L 148,238 L 98,230 Z" class="body-part-clickable" data-region="rippen_h_li" title="Rippen / Rücken hinten Links"/>
-        <path d="M 170,194 L 226,186 L 222,230 L 172,238 Z" class="body-part-clickable" data-region="rippen_h_re" title="Rippen / Rücken hinten Rechts"/>
+        <path d="M 78,150 L 122,156 L 120,192 L 82,186 Z" class="body-part-clickable" data-region="rippen_h_li" title="Rippen hinten Links"/>
+        <path d="M 138,156 L 182,150 L 178,186 L 140,192 Z" class="body-part-clickable" data-region="rippen_h_re" title="Rippen hinten Rechts"/>
 
         <!-- Lumbar Spine (LWS L1-L5) -->
-        <path d="M 152,208 L 168,208 L 166,268 L 154,268 Z" class="body-part-clickable" data-region="lws_wirbelsaeule" title="Lendenwirbelsäule (LWS)"/>
+        <path d="M 124,168 L 136,168 L 134,215 L 126,215 Z" class="body-part-clickable" data-region="lws_wirbelsaeule" title="Lendenwirbelsäule (LWS)"/>
 
         <!-- Flanks / Kidneys -->
-        <path d="M 100,232 L 150,240 L 146,276 L 108,268 Z" class="body-part-clickable" data-region="flanken_li" title="Flanke / Nierenbereich Links"/>
-        <path d="M 170,240 L 220,232 L 212,268 L 174,276 Z" class="body-part-clickable" data-region="flanken_re" title="Flanke / Nierenbereich Rechts"/>
+        <path d="M 84,188 L 122,194 L 118,222 L 90,216 Z" class="body-part-clickable" data-region="flanken_li" title="Flanke / Nierenbereich Links"/>
+        <path d="M 138,194 L 176,188 L 170,216 L 142,222 Z" class="body-part-clickable" data-region="flanken_re" title="Flanke / Nierenbereich Rechts"/>
 
         <!-- Sacrum & SI Joints (ISG / Kreuzbein) -->
-        <path d="M 144,270 L 176,270 L 172,314 L 148,314 Z" class="body-part-clickable" data-region="isg_kreuzbein" title="ISG (Iliosakralgelenk) & Kreuzbein"/>
+        <path d="M 118,216 L 142,216 L 138,252 L 122,252 Z" class="body-part-clickable" data-region="isg_kreuzbein" title="ISG (Iliosakralgelenk) & Kreuzbein"/>
 
         <!-- Gluteal Muscles (Gesäß / Gluteus) -->
-        <path d="M 100,280 L 144,306 L 138,348 L 92,334 Z" class="body-part-clickable" data-region="gesaess_li" title="Gesäß / Gluteus Links"/>
-        <path d="M 176,306 L 220,280 L 228,334 L 182,348 Z" class="body-part-clickable" data-region="gesaess_re" title="Gesäß / Gluteus Rechts"/>
+        <path d="M 84,225 L 120,244 L 114,276 L 78,266 Z" class="body-part-clickable" data-region="gesaess_li" title="Gesäß / Gluteus Links"/>
+        <path d="M 140,244 L 176,225 L 182,266 L 146,276 Z" class="body-part-clickable" data-region="gesaess_re" title="Gesäß / Gluteus Rechts"/>
 
         <!-- ARMS BACK -->
-        <!-- Triceps / Upper Arm Back -->
-        <rect x="62" y="170" width="28" height="66" rx="10" class="body-part-clickable" data-region="oberarm_li_h" title="Oberarm / Trizeps Links"/>
-        <rect x="230" y="170" width="28" height="66" rx="10" class="body-part-clickable" data-region="oberarm_re_h" title="Oberarm / Trizeps Rechts"/>
+        <rect x="56" y="122" width="22" height="52" rx="8" class="body-part-clickable" data-region="oberarm_li_h" title="Oberarm / Trizeps Links"/>
+        <rect x="182" y="122" width="22" height="52" rx="8" class="body-part-clickable" data-region="oberarm_re_h" title="Oberarm / Trizeps Rechts"/>
 
-        <!-- Elbow Tip (Olekranon) -->
-        <ellipse cx="76" cy="246" rx="13" ry="11" class="body-part-clickable" data-region="ellbogen_li_h" title="Ellbogenspitze Links"/>
-        <ellipse cx="244" cy="246" rx="13" ry="11" class="body-part-clickable" data-region="ellbogen_re_h" title="Ellbogenspitze Rechts"/>
+        <ellipse cx="67" cy="180" rx="10" ry="9" class="body-part-clickable" data-region="ellbogen_li_h" title="Ellbogenspitze Links"/>
+        <ellipse cx="193" cy="180" rx="10" ry="9" class="body-part-clickable" data-region="ellbogen_re_h" title="Ellbogenspitze Rechts"/>
 
-        <!-- Forearm Back -->
-        <rect x="64" y="258" width="24" height="68" rx="9" class="body-part-clickable" data-region="unterarm_li_h" title="Unterarm hinten Links"/>
-        <rect x="232" y="258" width="24" height="68" rx="9" class="body-part-clickable" data-region="unterarm_re_h" title="Unterarm hinten Rechts"/>
+        <rect x="56" y="190" width="20" height="54" rx="7" class="body-part-clickable" data-region="unterarm_li_h" title="Unterarm hinten Links"/>
+        <rect x="184" y="190" width="20" height="54" rx="7" class="body-part-clickable" data-region="unterarm_re_h" title="Unterarm hinten Rechts"/>
 
-        <!-- Hand Back / Dorsum -->
-        <path d="M 64,342 C 60,360 60,375 74,385 C 88,385 88,360 86,342 Z" class="body-part-clickable" data-region="handruecken_li" title="Handrücken Links"/>
-        <path d="M 256,342 C 260,360 260,375 246,385 C 232,385 232,360 234,342 Z" class="body-part-clickable" data-region="handruecken_re" title="Handrücken Rechts"/>
+        <path d="M 57,256 C 53,270 53,282 66,290 C 78,290 78,270 76,256 Z" class="body-part-clickable" data-region="handruecken_li" title="Handrücken Links"/>
+        <path d="M 203,256 C 207,270 207,282 194,290 C 182,290 182,270 184,256 Z" class="body-part-clickable" data-region="handruecken_re" title="Handrücken Rechts"/>
 
         <!-- LEGS & KNEES BACK -->
-        <!-- Hamstrings / Thighs Back -->
-        <rect x="98" y="342" width="40" height="92" rx="15" class="body-part-clickable" data-region="oberschenkel_li_h" title="Oberschenkel hinten / Ischias Links"/>
-        <rect x="182" y="342" width="40" height="92" rx="15" class="body-part-clickable" data-region="oberschenkel_re_h" title="Oberschenkel hinten / Ischias Rechts"/>
+        <rect x="82" y="270" width="32" height="74" rx="12" class="body-part-clickable" data-region="oberschenkel_li_h" title="Oberschenkel hinten / Ischias Links"/>
+        <rect x="146" y="270" width="32" height="74" rx="12" class="body-part-clickable" data-region="oberschenkel_re_h" title="Oberschenkel hinten / Ischias Rechts"/>
 
         <!-- Popliteal Fossa (Kniekehlen) -->
-        <ellipse cx="118" cy="446" rx="16" ry="12" class="body-part-clickable" data-region="kniekehle_li" title="Kniekehle Links"/>
-        <ellipse cx="202" cy="446" rx="16" ry="12" class="body-part-clickable" data-region="kniekehle_re" title="Kniekehle Rechts"/>
+        <ellipse cx="98" cy="350" rx="13" ry="10" class="body-part-clickable" data-region="kniekehle_li" title="Kniekehle Links"/>
+        <ellipse cx="162" cy="350" rx="13" ry="10" class="body-part-clickable" data-region="kniekehle_re" title="Kniekehle Rechts"/>
 
-        <!-- Calves / Gastrocnemius (Waden) -->
-        <rect x="104" y="462" width="30" height="76" rx="11" class="body-part-clickable" data-region="wade_li" title="Wade Links"/>
-        <rect x="186" y="462" width="30" height="76" rx="11" class="body-part-clickable" data-region="wade_re" title="Wade Rechts"/>
+        <!-- Calves (Waden) -->
+        <rect x="86" y="362" width="24" height="60" rx="9" class="body-part-clickable" data-region="wade_li" title="Wade Links"/>
+        <rect x="150" y="362" width="24" height="60" rx="9" class="body-part-clickable" data-region="wade_re" title="Wade Rechts"/>
 
-        <!-- Achilles Tendon (Achillessehnen) -->
-        <rect x="110" y="542" width="18" height="34" rx="6" class="body-part-clickable" data-region="achilles_li" title="Achillessehne Links"/>
-        <rect x="192" y="542" width="18" height="34" rx="6" class="body-part-clickable" data-region="achilles_re" title="Achillessehne Rechts"/>
+        <!-- Achilles Tendon -->
+        <rect x="92" y="426" width="13" height="26" rx="5" class="body-part-clickable" data-region="achilles_li" title="Achillessehne Links"/>
+        <rect x="155" y="426" width="13" height="26" rx="5" class="body-part-clickable" data-region="achilles_re" title="Achillessehne Rechts"/>
 
-        <!-- Heels & Soles (Ferse & Fersensporn) -->
-        <ellipse cx="119" cy="590" rx="16" ry="14" class="body-part-clickable" data-region="ferse_li" title="Ferse & Fußsohle Links"/>
-        <ellipse cx="201" cy="590" rx="16" ry="14" class="body-part-clickable" data-region="ferse_re" title="Ferse & Fußsohle Rechts"/>
+        <!-- Heels & Soles -->
+        <ellipse cx="98" cy="462" rx="13" ry="11" class="body-part-clickable" data-region="ferse_li" title="Ferse & Fußsohle Links"/>
+        <ellipse cx="162" cy="462" rx="13" ry="11" class="body-part-clickable" data-region="ferse_re" title="Ferse & Fußsohle Rechts"/>
       </svg>
     `;
   }
 
   // =========================================================================
   // Detailed Canine Anatomy Map (Buddy, Milla, Bella)
-  // ViewBox: 0 0 640 380
+  // ViewBox: 0 0 540 320
   // =========================================================================
   renderDogMap() {
     const container = document.getElementById('dogBodyMap');
     if (!container) return;
     container.innerHTML = `
-      <svg viewBox="0 0 640 380" xmlns="http://www.w3.org/2000/svg" class="anatomical-svg dog-svg" style="cursor:pointer; pointer-events:auto;">
-        <!-- Background Grid (Non-interactive) -->
-        <g class="body-background-lines" opacity="0.12" pointer-events="none" style="pointer-events:none;">
-          <line x1="30" y1="190" x2="610" y2="190" stroke="#f59e0b" stroke-dasharray="4 4" stroke-width="1.5"/>
-          <line x1="260" y1="20" x2="260" y2="360" stroke="#f59e0b" stroke-dasharray="2 4" stroke-width="1"/>
-          <line x1="480" y1="20" x2="480" y2="360" stroke="#f59e0b" stroke-dasharray="2 4" stroke-width="1"/>
-        </g>
-
+      <svg viewBox="0 0 540 320" xmlns="http://www.w3.org/2000/svg" class="anatomical-svg dog-svg" style="cursor:pointer; pointer-events:auto;">
         <!-- Muzzle / Jaws / Teeth -->
-        <path d="M 40,110 L 95,70 L 110,120 L 55,145 Z" class="body-part-clickable" data-region="dog_schnauze" title="Hund: Fang, Schnauze & Zähne"/>
+        <path d="M 40,95 L 90,65 L 100,105 L 55,125 Z" class="body-part-clickable" data-region="dog_schnauze" title="Hund: Fang, Schnauze & Zähne"/>
         
         <!-- Cranium / Forehead / Eyes -->
-        <path d="M 95,70 L 145,60 L 160,105 L 110,120 Z" class="body-part-clickable" data-region="dog_kopf" title="Hund: Stirn, Augen & Schädel"/>
+        <path d="M 90,65 L 130,55 L 140,95 L 100,105 Z" class="body-part-clickable" data-region="dog_kopf" title="Hund: Stirn, Augen & Schädel"/>
 
         <!-- Ears -->
-        <path d="M 135,60 L 165,20 L 178,65 Z" class="body-part-clickable" data-region="dog_ohren" title="Hund: Ohren"/>
+        <path d="M 120,55 L 145,20 L 155,60 Z" class="body-part-clickable" data-region="dog_ohren" title="Hund: Ohren"/>
 
         <!-- Cervical Spine (HWS / Nacken) -->
-        <path d="M 145,60 L 210,75 L 195,135 L 145,110 Z" class="body-part-clickable" data-region="dog_hws" title="Hund: Halswirbelsäule (HWS)"/>
+        <path d="M 130,55 L 185,65 L 175,115 L 130,95 Z" class="body-part-clickable" data-region="dog_hws" title="Hund: Halswirbelsäule (HWS)"/>
 
         <!-- Withers & Shoulder Blade (Scapula) -->
-        <path d="M 210,75 L 285,80 L 260,155 L 195,135 Z" class="body-part-clickable" data-region="dog_schulter" title="Hund: Schulterblatt & Widerrist"/>
+        <path d="M 185,65 L 245,70 L 225,135 L 175,115 Z" class="body-part-clickable" data-region="dog_schulter" title="Hund: Schulterblatt & Widerrist"/>
 
         <!-- Upper Arm & Elbow Joint -->
-        <path d="M 195,135 L 260,155 L 235,215 L 185,195 Z" class="body-part-clickable" data-region="dog_ellbogen" title="Hund: Oberarm & Ellbogengelenk"/>
+        <path d="M 175,115 L 225,135 L 205,185 L 165,170 Z" class="body-part-clickable" data-region="dog_ellbogen" title="Hund: Oberarm & Ellbogengelenk"/>
 
         <!-- Forearm & Carpal Joint (Vorderfußwurzel) -->
-        <rect x="190" y="210" width="28" height="82" rx="10" class="body-part-clickable" data-region="dog_karpal" title="Hund: Vorderfußwurzel & Unterarm"/>
+        <rect x="170" y="180" width="24" height="70" rx="8" class="body-part-clickable" data-region="dog_karpal" title="Hund: Vorderfußwurzel & Unterarm"/>
 
         <!-- Front Paws & Claws -->
-        <ellipse cx="204" cy="305" rx="20" ry="14" class="body-part-clickable" data-region="dog_vorderpfoten" title="Hund: Vorderpfoten & Ballen"/>
+        <ellipse cx="182" cy="260" rx="18" ry="12" class="body-part-clickable" data-region="dog_vorderpfoten" title="Hund: Vorderpfoten & Ballen"/>
 
         <!-- Thoracic Spine (BWS / Rücken) -->
-        <path d="M 285,80 L 400,85 L 390,135 L 280,135 Z" class="body-part-clickable" data-region="dog_bws" title="Hund: Brustwirbelsäule & Rücken"/>
+        <path d="M 245,70 L 345,75 L 335,120 L 240,120 Z" class="body-part-clickable" data-region="dog_bws" title="Hund: Brustwirbelsäule & Rücken"/>
 
         <!-- Ribcage & Chest -->
-        <path d="M 265,135 L 390,135 L 375,205 L 255,195 Z" class="body-part-clickable" data-region="dog_brustkorb" title="Hund: Brustkorb & Rippen"/>
+        <path d="M 230,120 L 335,120 L 325,175 L 220,170 Z" class="body-part-clickable" data-region="dog_brustkorb" title="Hund: Brustkorb & Rippen"/>
 
         <!-- Lumbar Spine (LWS) -->
-        <path d="M 400,85 L 490,95 L 475,145 L 390,135 Z" class="body-part-clickable" data-region="dog_lws" title="Hund: Lendenwirbelsäule (LWS)"/>
+        <path d="M 345,75 L 420,80 L 410,125 L 335,120 Z" class="body-part-clickable" data-region="dog_lws" title="Hund: Lendenwirbelsäule (LWS)"/>
 
         <!-- Abdomen / Mammary Chain (Bauch & Gesäuge) -->
-        <path d="M 375,205 L 465,205 L 455,245 L 370,235 Z" class="body-part-clickable" data-region="dog_bauch" title="Hund: Bauch & Gesäugeleiste"/>
+        <path d="M 325,175 L 400,175 L 395,210 L 320,205 Z" class="body-part-clickable" data-region="dog_bauch" title="Hund: Bauch & Gesäugeleiste"/>
 
         <!-- Pelvis & Sacrum (Kreuzbein & Becken) -->
-        <path d="M 490,95 L 555,105 L 535,165 L 475,145 Z" class="body-part-clickable" data-region="dog_becken" title="Hund: Becken & Kreuzbein"/>
+        <path d="M 420,80 L 475,90 L 460,145 L 410,125 Z" class="body-part-clickable" data-region="dog_becken" title="Hund: Becken & Kreuzbein"/>
 
         <!-- Hip Joint (Hüfte / HD) -->
-        <ellipse cx="515" cy="160" rx="26" ry="22" class="body-part-clickable" data-region="dog_huefte" title="Hund: Hüftgelenk (HD-Bereich)"/>
+        <ellipse cx="440" cy="140" rx="22" ry="19" class="body-part-clickable" data-region="dog_huefte" title="Hund: Hüftgelenk (HD-Bereich)"/>
 
         <!-- Thigh & Stifle / Knee Joint (Knie & Kreuzband) -->
-        <path d="M 495,170 L 548,170 L 530,248 L 480,240 Z" class="body-part-clickable" data-region="dog_knie" title="Hund: Kniegelenk & Oberschenkel"/>
+        <path d="M 425,150 L 470,150 L 455,215 L 410,210 Z" class="body-part-clickable" data-region="dog_knie" title="Hund: Kniegelenk & Oberschenkel"/>
 
         <!-- Hock / Tarsus (Sprunggelenk & Unterschenkel) -->
-        <rect x="490" y="242" width="30" height="60" rx="10" class="body-part-clickable" data-region="dog_sprunggelenk" title="Hund: Sprunggelenk (Tarsus)"/>
+        <rect x="420" y="210" width="26" height="52" rx="8" class="body-part-clickable" data-region="dog_sprunggelenk" title="Hund: Sprunggelenk (Tarsus)"/>
 
         <!-- Hind Paws & Claws -->
-        <ellipse cx="505" cy="310" rx="20" ry="14" class="body-part-clickable" data-region="dog_hinterpfoten" title="Hund: Hinterpfoten & Ballen"/>
+        <ellipse cx="433" cy="270" rx="18" ry="12" class="body-part-clickable" data-region="dog_hinterpfoten" title="Hund: Hinterpfoten & Ballen"/>
 
         <!-- Tail (Rute) -->
-        <path d="M 555,105 Q 610,80 625,40 Q 635,60 585,130 Z" class="body-part-clickable" data-region="dog_rute" title="Hund: Rute & Rutenansatz"/>
+        <path d="M 475,90 Q 520,70 530,35 Q 540,55 500,115 Z" class="body-part-clickable" data-region="dog_rute" title="Hund: Rute & Rutenansatz"/>
       </svg>
     `;
   }
