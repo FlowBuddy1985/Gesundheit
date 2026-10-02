@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="50%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+    <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="url(#bg)"/>
+  <!-- Stethoscope / Cross / Sun Heartbeat -->
+  <circle cx="256" cy="256" r="160" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
+  <path d="M 140 260 L 200 260 L 225 180 L 265 340 L 295 230 L 320 270 L 372 270" fill="none" stroke="url(#heartGrad)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Sun / UV Symbol -->
+  <circle cx="360" cy="150" r="28" fill="#f59e0b"/>
+  <circle cx="360" cy="150" r="38" fill="none" stroke="#f59e0b" stroke-width="4" stroke-dasharray="6,6"/>
+  <!-- Paw print small -->
+  <ellipse cx="160" cy="160" rx="12" ry="16" fill="#ec4899" transform="rotate(-15 160 160)"/>
+  <ellipse cx="190" cy="145" rx="12" ry="16" fill="#ec4899"/>
+  <ellipse cx="220" cy="160" rx="12" ry="16" fill="#ec4899" transform="rotate(15 220 160)"/>
+  <path d="M 170 195 C 170 180 210 180 210 195 C 210 215 170 215 170 195 Z" fill="#ec4899"/>
+</svg>

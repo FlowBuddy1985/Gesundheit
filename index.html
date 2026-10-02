@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Gesundheit – Tagebuch & Wetter Regensburg</title>
+  
+  <!-- iOS Web App Meta Tags & PWA Setup -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Gesundheit">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Gesundheit">
+  <meta name="theme-color" content="#0F172A">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+
+  <!-- Google Fonts for iOS SF-like clean aesthetics -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- CSS Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app" class="ios-app">
+    <!-- Top iOS Status & Profile Bar -->
+    <header class="app-header">
+      <div class="header-top">
+        <div class="header-brand">
+          <span class="brand-icon">🩺</span>
+          <div class="brand-text">
+            <h1 class="brand-title">Gesundheit</h1>
+            <span class="location-badge" title="Regensburg Innenstadt">📍 93047 Regensburg</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button id="btnThemeToggle" class="icon-btn" title="Design anpassen" aria-label="Theme wechseln">
+            <span class="theme-icon">🌙</span>
+          </button>
+          <button id="btnExportMenu" class="icon-btn" title="Export & Arztbericht" aria-label="Exportieren">
+            <span>📑</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Profile Selector (Ich, Buddy, Milla, Bella) -->
+      <div class="profile-scroll-container">
+        <div class="profile-chips" id="profileSelector">
+          <button class="profile-chip active" data-profile="human">
+            <span class="avatar-emoji">👤</span>
+            <span class="profile-name">Ich (Mensch)</span>
+            <span class="profile-sub">Haut & Schmerz</span>
+          </button>
+          <button class="profile-chip" data-profile="buddy">
+            <span class="avatar-emoji">🐕</span>
+            <span class="profile-name">Buddy</span>
+            <span class="profile-sub">Rüde</span>
+          </button>
+          <button class="profile-chip" data-profile="milla">
+            <span class="avatar-emoji">🐩</span>
+            <span class="profile-name">Milla</span>
+            <span class="profile-sub">Hündin • Zyklus</span>
+          </button>
+          <button class="profile-chip" data-profile="bella">
+            <span class="avatar-emoji">🐶</span>
+            <span class="profile-name">Bella</span>
+            <span class="profile-sub">Hündin • Zyklus</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Date Bar with Fast Jump from 2010 to Today -->
+      <div class="date-navigator-bar">
+        <button class="date-nav-btn" id="btnPrevDay" aria-label="Vorheriger Tag" title="Einen Tag zurück">◀</button>
+        <div class="date-display-wrapper" id="dateDisplayWrapper" title="Interaktiven Kalender öffnen">
+          <span class="cal-icon-prefix">📅</span>
+          <div class="date-formatted-text" id="currentDateFormatted">Lade Datum...</div>
+          <input type="date" id="currentDateInput" min="2010-01-01" class="date-picker-input-hidden">
+        </div>
+        <button class="date-nav-btn" id="btnNextDay" aria-label="Nächster Tag" title="Einen Tag vor">▶</button>
+        <button class="date-cal-btn" id="btnOpenCalendar" title="Interaktiven Kalender öffnen">📅 Kalender</button>
+        <button class="date-today-btn" id="btnJumpToday" title="Zu Heute springen">Heute</button>
+        <button class="date-year-btn" id="btnJumpYear" title="Jahre schnell springen">Jahre ▾</button>
+      </div>
+
+      <!-- Year Quick Jump Popup (2016 - 2026) -->
+      <div class="year-selector-dropdown" id="yearSelectorDropdown" style="display: none;">
+        <div class="year-grid" id="yearGrid"></div>
+      </div>
+    </header>
+
+    <!-- Main Content Container with Tabs -->
+    <main class="app-main-content">
+      
+      <!-- TAB 1: ENTRY & LOGGING -->
+      <section id="tab-entry" class="tab-view active">
+        <!-- Weather & UV Index Card for 93047 Regensburg -->
+        <div class="weather-widget-card" id="weatherWidget">
+          <div class="weather-loading" id="weatherLoading">
+            <div class="spinner"></div>
+            <span>Wetter & UV-Index für Regensburg Innenstadt (93047) wird geladen...</span>
+          </div>
+          <div class="weather-content" id="weatherContent" style="display: none;">
+            <div class="weather-header-row">
+              <div class="weather-main-info">
+                <span class="weather-icon-large" id="weatherIcon">☀️</span>
+                <div>
+                  <div class="weather-temp-range" id="weatherTemp">--°C</div>
+                  <div class="weather-condition-text" id="weatherCondition">--</div>
+                </div>
+              </div>
+              <div class="uv-badge-container">
+                <div class="uv-badge" id="uvBadge">
+                  <span class="uv-title">UV-INDEX</span>
+                  <span class="uv-value" id="uvValue">--</span>
+                </div>
+                <span class="uv-status-label" id="uvStatus">--</span>
+              </div>
+            </div>
+
+            <!-- Detailed Metrics: Pressure, Rain, Wind, Humidity -->
+            <div class="weather-details-grid">
+              <div class="weather-detail-item">
+                <span class="detail-label">Luftdruck</span>
+                <span class="detail-value" id="weatherPressure">-- hPa</span>
+              </div>
+              <div class="weather-detail-item">
+                <span class="detail-label">Niederschlag</span>
+                <span class="detail-value" id="weatherRain">-- mm</span>
+              </div>
+              <div class="weather-detail-item">
+                <span class="detail-label">Temperatur Min/Max</span>
+                <span class="detail-value" id="weatherTempRange">-- / --</span>
+              </div>
+              <div class="weather-detail-item">
+                <span class="detail-label">Wind</span>
+                <span class="detail-value" id="weatherWind">-- km/h</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Profile Entry Card (Changes for Human vs Dog) -->
+        <form id="entryForm" class="entry-form-container">
+          
+          <!-- Pain Intensity Card: Separate for Joints & Skin -->
+          <div class="card ios-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon">⚡</span>
+                <h2 class="card-title" id="painScaleTitle">Schmerzintensität (NRS 0–10)</h2>
+              </div>
+              <span class="pain-score-display" id="painScoreBadge">0 - Schmerzfrei</span>
+            </div>
+            
+            <!-- 1. Knochen & Gelenke Schmerz (Hüfte, Knie, Füße, Rücken) -->
+            <div class="dual-pain-slider-block" style="margin-bottom:18px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <label class="input-label" style="font-weight:700; color:var(--text-primary); margin:0;">
+                  🦴 Knochen- & Gelenkschmerz (Hüfte, Knie, Rücken, Füße):
+                </label>
+                <span class="slider-val-badge" id="painJointsBadge" style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; font-weight:700; padding:2px 8px; border-radius:12px; font-size:12px;">0/10</span>
+              </div>
+              <div class="pain-slider-container">
+                <input type="range" id="painJointsInput" min="0" max="10" step="1" value="0" class="pain-slider" style="accent-color:#f59e0b;">
+                <div class="pain-scale-labels">
+                  <span>0 (Kein)</span>
+                  <span>3 (Leicht)</span>
+                  <span>6 (Mittel)</span>
+                  <span>8 (Stark)</span>
+                  <span>10 (Maximal)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Haut & Dermatologie Schmerz (Brennen, Juckreiz, Hitze) -->
+            <div class="dual-pain-slider-block human-only-section" style="margin-bottom:14px; padding-top:12px; border-top:1px solid var(--border-subtle);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <label class="input-label" style="font-weight:700; color:var(--text-primary); margin:0;">
+                  🧴 Haut- & Dermatologieschmerz (Brennen, Jucken, Entzündung):
+                </label>
+                <span class="slider-val-badge" id="painSkinBadge" style="background:linear-gradient(135deg, #0ea5e9, #0284c7); color:#fff; font-weight:700; padding:2px 8px; border-radius:12px; font-size:12px;">0/10</span>
+              </div>
+              <div class="pain-slider-container">
+                <input type="range" id="painSkinInput" min="0" max="10" step="1" value="0" class="pain-slider" style="accent-color:#0ea5e9;">
+                <div class="pain-scale-labels">
+                  <span>0 (Reizfrei)</span>
+                  <span>3 (Leicht)</span>
+                  <span>6 (Mäßig)</span>
+                  <span>8 (Starkes Brennen)</span>
+                  <span>10 (Unerträglich)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Daytime Breakdown (Morgens, Mittags, Abends, Nachts) -->
+            <div class="form-subgroup">
+              <label class="input-label">Tageszeitlicher Verlauf & Intensität:</label>
+              <div class="daytime-pain-grid">
+                <div class="daytime-box">
+                  <span class="daytime-label">🌅 Morgens</span>
+                  <select id="painMorning" class="ios-select mini-select">
+                    <option value="">-</option>
+                    <option value="0">0 (Kein)</option>
+                    <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                    <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                    <option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+                  </select>
+                </div>
+                <div class="daytime-box">
+                  <span class="daytime-label">☀️ Mittags</span>
+                  <select id="painNoon" class="ios-select mini-select">
+                    <option value="">-</option>
+                    <option value="0">0 (Kein)</option>
+                    <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                    <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                    <option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+                  </select>
+                </div>
+                <div class="daytime-box">
+                  <span class="daytime-label">🌆 Abends</span>
+                  <select id="painEvening" class="ios-select mini-select">
+                    <option value="">-</option>
+                    <option value="0">0 (Kein)</option>
+                    <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                    <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                    <option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+                  </select>
+                </div>
+                <div class="daytime-box">
+                  <span class="daytime-label">🌙 Nachts</span>
+                  <select id="painNight" class="ios-select mini-select">
+                    <option value="">-</option>
+                    <option value="0">0 (Kein)</option>
+                    <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                    <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                    <option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Multi-Day Episode / Dauerschmerz / Perioden Dokumentation -->
+            <div class="form-subgroup episode-box">
+              <div class="checkbox-row">
+                <label class="custom-checkbox-label">
+                  <input type="checkbox" id="isMultiDayEpisode">
+                  <span class="checkbox-custom"></span>
+                  <strong>Dauerschmerz / Mehrtägige Periode & Schub</strong>
+                </label>
+              </div>
+              <div id="multiDayDetails" style="display:none; margin-top:12px;">
+                <div class="period-type-wrapper" style="margin-bottom:12px;">
+                  <label class="detail-label" style="display:block; margin-bottom:6px; font-weight:600;">Art der Periode / Episode:</label>
+                  <div class="chip-selector-group single-select" id="episodeTypeChips">
+                    <button type="button" class="tag-chip selected" data-val="schmerz_schub">⚡ Schmerzepisode / Schub</button>
+                    <button type="button" class="tag-chip" data-val="migraene">🧠 Migräne / Kopfschmerz-Phase</button>
+                    <button type="button" class="tag-chip" data-val="gelenke">🦴 Hüft-/Knie-/Fuß-Schub</button>
+                    <button type="button" class="tag-chip" data-val="adhs_tief">🌪️ ADHS-Krise / Reizüberflutung</button>
+                    <button type="button" class="tag-chip" data-val="haut_schub">🧴 Hautschub / Ekzem</button>
+                    <button type="button" class="tag-chip" data-val="zyklus">🌸 Zyklus / Läufigkeit</button>
+                  </div>
+                </div>
+
+                <div class="duration-container">
+                  <label class="detail-label" style="display:block; margin-bottom:6px; font-weight:600;">Schnellauswahl Dauer:</label>
+                  <div class="duration-preset-chips" id="durationPresetChips">
+                    <button type="button" class="duration-chip" data-days="1" data-val="1 Tag">1 Tag</button>
+                    <button type="button" class="duration-chip" data-days="2" data-val="2 Tage">2 Tage</button>
+                    <button type="button" class="duration-chip" data-days="3" data-val="3 Tage">3 Tage</button>
+                    <button type="button" class="duration-chip" data-days="4" data-val="4 Tage">4 Tage</button>
+                    <button type="button" class="duration-chip" data-days="5" data-val="5 Tage">5 Tage</button>
+                    <button type="button" class="duration-chip" data-days="7" data-val="1 Woche (7 Tage)">1 Woche</button>
+                    <button type="button" class="duration-chip" data-days="14" data-val="2 Wochen (14 Tage)">2 Wochen</button>
+                    <button type="button" class="duration-chip" data-days="30" data-val="1 Monat (30 Tage)">1 Monat</button>
+                    <button type="button" class="duration-chip" data-days="0" data-val="Anhaltend / Chronisch">Anhaltend</button>
+                  </div>
+
+                  <div class="episode-range-grid" style="margin-top:10px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div>
+                      <label class="detail-label" style="font-size:12px; color:var(--text-secondary); margin-bottom:4px; display:block;">Von Datum (Beginn):</label>
+                      <input type="date" id="episodeStartDateInput" class="ios-text-input">
+                    </div>
+                    <div>
+                      <label class="detail-label" style="font-size:12px; color:var(--text-secondary); margin-bottom:4px; display:block;">Bis Datum (Ende):</label>
+                      <input type="date" id="episodeEndDateInput" class="ios-text-input">
+                    </div>
+                  </div>
+
+                  <input type="text" id="episodeDurationDays" class="ios-text-input" placeholder="Dauerbeschreibung (z.B. 5 Tage, 2 Wochen, anhaltend)" style="margin-top:8px;">
+
+                  <div class="multiday-action-card" style="margin-top:12px; padding:12px; border-radius:12px; background:rgba(14,165,233,0.08); border:1px solid rgba(14,165,233,0.2);">
+                    <div style="font-size:13px; font-weight:600; color:var(--accent-blue); margin-bottom:6px;">
+                      📋 Automatische Dokumentation auf alle Tage:
+                    </div>
+                    <div style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">
+                      Beim Speichern oder Klick auf diesen Button wird diese Periode für <strong>jeden einzelnen Tag im gewählten Zeitraum</strong> im Tagebuch, Kalender und Verlauf eingetragen.
+                    </div>
+                    <button type="button" id="btnApplyMultiDayPeriod" class="action-sub-btn" style="width:100%; padding:10px; border-radius:10px; background:linear-gradient(135deg, #0284c7, #38bdf8); color:#fff; border:none; font-weight:700; cursor:pointer; font-size:13px;">
+                      📅 Auf alle Tage dieser Periode übertragen & speichern
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pain Character / Quality Chips -->
+            <div class="form-subgroup">
+              <label class="input-label">Schmerzcharakter & Art (inkl. Hautschmerz):</label>
+              <div class="chip-selector-group" id="painTypeChips">
+                <button type="button" class="tag-chip" data-val="stechend">⚡ Stechend</button>
+                <button type="button" class="tag-chip" data-val="dumpf">🌊 Dumpf</button>
+                <button type="button" class="tag-chip" data-val="brennend">🔥 Brennend / Hautbrennen</button>
+                <button type="button" class="tag-chip" data-val="pulsierend">💓 Pulsierend</button>
+                <button type="button" class="tag-chip" data-val="krampfartig">🌀 Krampfartig</button>
+                <button type="button" class="tag-chip" data-val="ziehend">🏹 Ziehend</button>
+                <button type="button" class="tag-chip" data-val="drückend">⚓ Drückend</button>
+                <button type="button" class="tag-chip" data-val="nervenschmerz">⚡ Nerven / Kribbeln</button>
+                <button type="button" class="tag-chip" data-val="gelenkschmerz">🦴 Gelenk- / Anlaufschmerz</button>
+                <button type="button" class="tag-chip" data-val="juckend_schmerz">🧴 Juckender Hautschmerz</button>
+                <button type="button" class="tag-chip" data-val="sonnenempfindlich">☀️ UV-Überempfindlich</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SPECIAL SECTION FOR HUMAN: ADHS & FOKUS / REIZVERARBEITUNG -->
+          <div class="card ios-card human-only-section" id="adhsSection">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon">🧠</span>
+                <h2 class="card-title">ADHS & Neurodiversität (Fokus, Reize, Stimmung)</h2>
+              </div>
+              <span class="status-pill" id="adhsScorePill">Ausgeglichen</span>
+            </div>
+
+            <div class="form-subgroup">
+              <label class="input-label">ADHS-Belastungsgrad & Reizüberflutung (0–10):</label>
+              <div class="skin-slider-wrapper">
+                <input type="range" id="adhsSlider" min="0" max="10" step="1" value="0" class="skin-slider" style="accent-color:#8b5cf6;">
+                <span class="slider-val-badge" id="adhsValBadge" style="background:#8b5cf6;">0</span>
+              </div>
+            </div>
+
+            <div class="form-subgroup">
+              <label class="input-label">ADHS-Merkmale & Tagesbefinden heute:</label>
+              <div class="chip-selector-group" id="adhsSymptomChips">
+                <button type="button" class="tag-chip" data-val="fokusverlust">🧠 Konzentrationsschwäche / Brain Fog</button>
+                <button type="button" class="tag-chip" data-val="innere_unruhe">⚡ Innere Unruhe & Getriebenheit</button>
+                <button type="button" class="tag-chip" data-val="reizueberflutung">🤯 Reizüberflutung (Sensory Overload)</button>
+                <button type="button" class="tag-chip" data-val="prokrastination">⏳ Exekutive Dysfunktion / Blockade</button>
+                <button type="button" class="tag-chip" data-val="gedankenrasen">🌪️ Gedankenrasen & Gedankensprünge</button>
+                <button type="button" class="tag-chip" data-val="impulsivitaet">💥 Emotionale Dysregulation / Impulsiv</button>
+                <button type="button" class="tag-chip" data-val="hyperfokus">🎯 Hyperfokus (stundenlang versunken)</button>
+                <button type="button" class="tag-chip" data-val="dopamin_tief">🔋 Niedriger Antrieb / Dopamintief</button>
+                <button type="button" class="tag-chip" data-val="rebound">📉 Rebound-Effekt (nach Medikation)</button>
+                <button type="button" class="tag-chip" data-val="vergesslichkeit">🔕 Zerstreutheit / Vergesslichkeit</button>
+                <button type="button" class="tag-chip" data-val="schlaf_adhs">🛌 Einschlafprobleme / Kopf nicht ruhig</button>
+              </div>
+            </div>
+
+            <div class="form-subgroup">
+              <label class="input-label" for="adhsNotes">ADHS-Tagesnotizen (Wirkungsdauer, Auslöser, Stressoren):</label>
+              <input type="text" id="adhsNotes" class="ios-text-input" placeholder="z.B. Elvanse 50mg um 8 Uhr, Rebound um 17 Uhr, laute Umgebung...">
+            </div>
+          </div>
+
+          <!-- SPECIAL SECTION FOR HUMAN: HAUT & DERMATOLOGIE -->
+          <div class="card ios-card human-only-section" id="skinSection">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon">🧴</span>
+                <h2 class="card-title">Haut & Dermatologie</h2>
+              </div>
+              <span class="status-pill" id="skinScorePill">Keine Beschwerden</span>
+            </div>
+
+            <div class="form-subgroup">
+              <label class="input-label">Juckreiz & Hautbrennen (0–10):</label>
+              <div class="skin-slider-wrapper">
+                <input type="range" id="skinItchInput" min="0" max="10" step="1" value="0" class="skin-slider">
+                <span class="slider-val-badge" id="skinItchValBadge">0</span>
+              </div>
+            </div>
+
+            <div class="form-subgroup">
+              <label class="input-label">Hautzustand & Auffälligkeiten:</label>
+              <div class="chip-selector-group" id="skinSymptomChips">
+                <button type="button" class="tag-chip" data-val="rötung">🔴 Rötung (Erythem)</button>
+                <button type="button" class="tag-chip" data-val="trockenheit">🏜️ Sehr trocken / Schuppend</button>
+                <button type="button" class="tag-chip" data-val="ausschlag">💥 Ausschlag / Ekzem</button>
+                <button type="button" class="tag-chip" data-val="quaddeln">⚪ Quaddeln / Nesselsucht</button>
+                <button type="button" class="tag-chip" data-val="blasen">🫧 Bläschen / Wunde</button>
+                <button type="button" class="tag-chip" data-val="sonnenreaktion">☀️ Sonnen-/UV-Reaktion</button>
+                <button type="button" class="tag-chip" data-val="hitzegefühl">🌡️ Heiß / Entzündet</button>
+                <button type="button" class="tag-chip" data-val="schwellung">💧 Ödem / Schwellung</button>
+              </div>
+            </div>
+
+            <div class="form-subgroup">
+              <label class="input-label" for="skinNotes">Hautpflege / Cremes / Auslöser:</label>
+              <input type="text" id="skinNotes" class="ios-text-input" placeholder="z.B. Cortison-Salbe, Feuchtigkeitscreme, UV-Belastung...">
+            </div>
+          </div>
+
+          <!-- SPECIAL SECTION FOR DOGS (MILLA & BELLA): LÄUFIGKEIT / PERIODE TRACKER -->
+          <div class="card ios-card female-dog-only-section" id="heatCycleSection" style="display: none;">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon">🌸</span>
+                <h2 class="card-title">Läufigkeit & Zyklus (Periode)</h2>
+              </div>
+              <span class="status-pill cycle-pill" id="heatStatusBadge">Inaktiv</span>
+            </div>
+
+            <div class="form-subgroup">
+              <label class="input-label">Aktuelle Zyklusphase:</label>
+              <div class="chip-selector-group single-select" id="heatPhaseChips">
+                <button type="button" class="tag-chip cycle-chip" data-val="keine">Keine Läufigkeit</button>
+                <button type="button" class="tag-chip cycle-chip" data-val="vorbrunst">🩸 1. Vorbrunst (Blutung)</button>
+                <button type="button" class="tag-chip cycle-chip" data-val="standhitze">💖 2. Standhitze (Deckbereit)</button>
+                <button type="button" class="tag-chip cycle-chip" data-val="nachbrunst">🔄 3. Nachbrunst (Abklingend)</button>
+                <button type="button" class="tag-chip cycle-chip" data-val="scheintraechtigkeit">🍼 Scheinträchtigkeit</button>
+              </div>
+            </div>
+
+            <div class="form-subgroup">
+              <label class="input-label">Blutungsstärke & Symptome:</label>
+              <div class="chip-selector-group" id="heatSymptomChips">
+                <button type="button" class="tag-chip" data-val="leicht_blutung">Leichte Blutung</button>
+                <button type="button" class="tag-chip" data-val="starke_blutung">Starke Blutung</button>
+                <button type="button" class="tag-chip" data-val="geschwollen">Vulva stark geschwollen</button>
+                <button type="button" class="tag-chip" data-val="haeufig_putzen">Ständiges Putzen</button>
+                <button type="button" class="tag-chip" data-val="anhaenglich">Sehr anhänglich / verschmust</button>
+                <button type="button" class="tag-chip" data-val="unruhig">Unruhig / Winseln</button>
+                <button type="button" class="tag-chip" data-val="ruepel_abwehr">Rüden abwehren</button>
+                <button type="button" class="tag-chip" data-val="fressunlust">Appetitlosigkeit</button>
+              </div>
+            </div>
+
+            <div class="form-subgroup">
+              <label class="input-label" for="heatCycleNotes">Notizen zur Läufigkeit:</label>
+              <input type="text" id="heatCycleNotes" class="ios-text-input" placeholder="z.B. Tag 5 der Blutung, Höschen angezogen, Markieren...">
+            </div>
+          </div>
+
+          <!-- SPECIAL SECTION FOR DOGS: MOBILITY & GAIT (BUDDY, MILLA, BELLA) -->
+          <div class="card ios-card dog-only-section" id="dogMobilitySection" style="display: none;">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon">🐾</span>
+                <h2 class="card-title">Hundebefinden & Gangbild</h2>
+              </div>
+              <span class="status-pill" id="dogGaitBadge">Normal</span>
+            </div>
+
+            <div class="form-subgroup">
+              <label class="input-label">Lahmheit & Bewegungsgrad (0–5):</label>
+              <div class="dog-slider-wrapper">
+                <input type="range" id="dogLamenessInput" min="0" max="5" step="1" value="0" class="dog-slider">
+                <span class="slider-val-badge" id="dogLamenessBadge">0 - Flott & Schmerzfrei</span>
+              </div>
+            </div>
+
+            <div class="form-subgroup">
+              <label class="input-label">Auffälligkeiten im Hundealltag:</label>
+              <div class="chip-selector-group" id="dogSymptomChips">
+                <button type="button" class="tag-chip" data-val="aufstehschmerz">🦵 Schweres Aufstehen / Steif</button>
+                <button type="button" class="tag-chip" data-val="treppen_meiden">🪜 Vermeidet Treppen</button>
+                <button type="button" class="tag-chip" data-val="spaziergang_kuerzer">⏱️ Kürzere Runden nötig</button>
+                <button type="button" class="tag-chip" data-val="lecken_pfoten">🐾 Lecken an Gelenken/Pfoten</button>
+                <button type="button" class="tag-chip" data-val="hecheln_unruhe">💨 Starkes Hecheln / Unruhe</button>
+                <button type="button" class="tag-chip" data-val="spielunlust">🎾 Spielunlust / Müde</button>
+                <button type="button" class="tag-chip" data-val="beruehrung_schmerz">⚠️ Schmerz bei Berührung</button>
+                <button type="button" class="tag-chip" data-val="passgang">🐕 Passgang / Einknicken</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- INTERACTIVE BODY MAP (HUMAN OR DOG) - DETAILED & EXPANDED -->
+          <div class="card ios-card body-map-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon">📍</span>
+                <h2 class="card-title">Interaktive Schmerzlokalisation (Körperkarte)</h2>
+              </div>
+              <button type="button" class="text-action-btn" id="btnClearBodyMap">Zurücksetzen</button>
+            </div>
+            
+            <p class="section-hint">Tippen Sie direkt auf die vergrößerte Körperkarte oder nutzen Sie die Schnellauswahl-Buttons unten:</p>
+
+            <!-- Human Body Map View Switcher -->
+            <div class="body-map-view-switcher" id="humanViewSwitcher">
+              <button type="button" class="body-view-toggle-btn active" data-view-mode="both">👥 Beide Ansichten</button>
+              <button type="button" class="body-view-toggle-btn" data-view-mode="front">🔍 Vorne (groß)</button>
+              <button type="button" class="body-view-toggle-btn" data-view-mode="back">🔍 Hinten (groß)</button>
+            </div>
+
+            <!-- Real-time Touch / Hover Feedback Label -->
+            <div class="body-map-hover-indicator">
+              <span class="hover-icon">👉</span>
+              <span id="bodyMapHoverLabel" class="hover-text">Tippen Sie auf eine Region</span>
+            </div>
+            
+            <!-- Human Body Map Canvas / SVG -->
+            <div class="body-map-container" id="humanBodyMapWrapper">
+              <div class="body-map-views">
+                <div class="body-map-box" id="bodyMapBoxFront">
+                  <div class="view-tag-badge">Vorderseite</div>
+                  <div class="interactive-body" id="humanBodyFront"></div>
+                </div>
+                <div class="body-map-box" id="bodyMapBoxBack">
+                  <div class="view-tag-badge">Rückseite</div>
+                  <div class="interactive-body" id="humanBodyBack"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dog Body Map Canvas / SVG -->
+            <div class="body-map-container" id="dogBodyMapWrapper" style="display: none;">
+              <div class="body-map-views">
+                <div class="body-map-box dog-box" id="bodyMapBoxDog">
+                  <div class="view-tag-badge">🐕 Anatomieprofil Hund (Buddy / Milla / Bella)</div>
+                  <div class="interactive-dog" id="dogBodyMap"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Selection for Hips, Knees, Feet, Spine, Skin & Joints -->
+            <div class="body-quick-selection-section">
+              <label class="input-label" style="font-size:12px; margin-bottom:8px; display:block; color:var(--text-secondary);">
+                🎯 Schnellauswahl Schmerzregionen & Gelenke (1-Klick):
+              </label>
+              <div class="chip-selector-group body-quick-chips" id="bodyQuickChips">
+                <button type="button" class="tag-chip body-quick-chip" data-region="huefte_li_v">🦴 Hüfte li</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="huefte_re_v">🦴 Hüfte re</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="patella_li">🦵 Knie li</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="patella_re">🦵 Knie re</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="knie_innen_li">🦵 Innenmeniskus li</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="knie_innen_re">🦵 Innenmeniskus re</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="kniekehle_li">🦵 Kniekehle li</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="kniekehle_re">🦵 Kniekehle re</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="sprunggelenk_li">🦶 Sprunggelenk li</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="sprunggelenk_re">🦶 Sprunggelenk re</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="fuss_li">🦶 Fuß li</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="fuss_re">🦶 Fuß re</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="ferse_li">🦶 Ferse li</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="ferse_re">🦶 Ferse re</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="achilles_li">🦶 Achillessehne li</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="achilles_re">🦶 Achillessehne re</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="lws_wirbelsaeule">👤 LWS (Lende)</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="isg_kreuzbein">👤 ISG / Kreuzbein</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="bws_wirbelsaeule">👤 BWS (Brustwirbel)</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="nacken_hws">💆 Nacken / HWS</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="schulter_li_v">💪 Schulter li</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="schulter_re_v">💪 Schulter re</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="ellbogen_li">💪 Ellbogen li</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="ellbogen_re">💪 Ellbogen re</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="handgelenk_li">🖐️ Handgelenk li</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="handgelenk_re">🖐️ Handgelenk re</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="kopf_stirn">💆 Kopf / Stirn</button>
+                <button type="button" class="tag-chip body-quick-chip" data-region="ganzkoerper_haut">🧴 Ganzkörper Haut / Juckreiz</button>
+              </div>
+            </div>
+
+            <div class="selected-regions-container">
+              <span class="regions-label">Markierte Regionen:</span>
+              <div class="selected-regions-tags" id="selectedRegionsTags">
+                <span class="empty-tag">Keine Region markiert</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- DAILY LIMITATIONS & RESTRICTIONS (EINSCHRÄNKUNGEN IM ALLTAG) -->
+          <div class="card ios-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon">⚠️</span>
+                <h2 class="card-title">Einschränkungen im Alltag</h2>
+              </div>
+              <span class="limitation-score-badge" id="limitationScoreBadge">0% Einschränkung</span>
+            </div>
+
+            <div class="form-subgroup">
+              <label class="input-label">Schweregrad der Beeinträchtigung (0–10):</label>
+              <input type="range" id="limitationSlider" min="0" max="10" step="1" value="0" class="limitation-slider">
+            </div>
+
+            <div class="form-subgroup">
+              <label class="input-label">Konkrete Problembereiche heute:</label>
+              <div class="chip-selector-group" id="limitationChips">
+                <button type="button" class="tag-chip" data-val="gehen">🚶 Längeres Gehen</button>
+                <button type="button" class="tag-chip" data-val="treppen">🪜 Treppensteigen</button>
+                <button type="button" class="tag-chip" data-val="buecken">🧘 Bücken & Heben</button>
+                <button type="button" class="tag-chip" data-val="sitzen">🪑 Langes Sitzen</button>
+                <button type="button" class="tag-chip" data-val="stehen">🧍 Langes Stehen</button>
+                <button type="button" class="tag-chip" data-val="schlaf">🛌 Schlaflosigkeit / Durchschlafstörung</button>
+                <button type="button" class="tag-chip" data-val="haushalt">🧹 Hausarbeit & Kochen</button>
+                <button type="button" class="tag-chip" data-val="arbeit">💻 Berufliche Arbeit</button>
+                <button type="button" class="tag-chip" data-val="gassi">🐕 Hundespaziergang / Gassi gehen</button>
+                <button type="button" class="tag-chip" data-val="autofahren">🚗 Autofahren</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- PHOTOS & ATTACHMENTS (BILDERDOKUMENTATION) -->
+          <div class="card ios-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon">📷</span>
+                <h2 class="card-title">Fotos & Befunde (Bilder)</h2>
+              </div>
+              <span class="photo-count-badge" id="photoCountBadge">0 Fotos</span>
+            </div>
+            
+            <p class="section-hint">Fotos von Haut, Schwellungen, Haltung, Wunden oder Befunden hinzufügen:</p>
+
+            <div class="photo-upload-actions">
+              <label class="photo-btn camera-btn" for="photoCameraInput">
+                <span>📸 Foto aufnehmen</span>
+                <input type="file" id="photoCameraInput" accept="image/*" capture="environment" style="display:none;">
+              </label>
+              <label class="photo-btn gallery-btn" for="photoGalleryInput">
+                <span>🖼️ Aus Mediathek</span>
+                <input type="file" id="photoGalleryInput" accept="image/*" multiple style="display:none;">
+              </label>
+            </div>
+
+            <!-- Attached Photos Grid -->
+            <div class="attached-photos-grid" id="attachedPhotosGrid"></div>
+          </div>
+
+          <!-- MEDICATIONS, TREATMENTS & PRESET SELECTION -->
+          <div class="card ios-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon">💊</span>
+                <h2 class="card-title">Medikamente, Behandlungen & Notizen</h2>
+              </div>
+            </div>
+
+            <!-- Medication Presets / Quick Selection Chips -->
+            <div class="form-subgroup">
+              <label class="input-label">Medikamenten-Vorauswahl (Tippen zum Einfügen/Entfernen):</label>
+              
+              <!-- Human Pain Meds -->
+              <div class="med-preset-category human-only-section">
+                <span class="med-cat-title">⚡ Schmerzmedikamente:</span>
+                <div class="chip-selector-group med-preset-chips" id="medPresetsPain">
+                  <button type="button" class="tag-chip med-chip" data-med="Ibuprofen 400mg">💊 Ibuprofen 400</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Ibuprofen 600mg">💊 Ibuprofen 600</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Ibuprofen 800mg">💊 Ibuprofen 800</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Paracetamol 500mg">💊 Paracetamol 500</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Paracetamol 1000mg">💊 Paracetamol 1000</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Novaminsulfon 500mg">💊 Novaminsulfon 500mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Novamin Tropfen (30 Tr.)">💧 Novamin Tropfen</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Diclofenac 50mg">💊 Diclofenac 50mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Voltaren Schmerzgel">🧴 Voltaren Gel</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Tilidin/Naloxon 50/4mg">💊 Tilidin 50/4mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Tilidin/Naloxon 100/8mg">💊 Tilidin 100/8mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Tramadol 50mg">💊 Tramadol 50mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Naproxen 500mg">💊 Naproxen 500mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Arcoxia (Etoricoxib) 90mg">💊 Arcoxia 90mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Pregabalin 75mg">💊 Pregabalin 75mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Prednisolon (Cortison)">💊 Cortison / Prednisolon</button>
+                </div>
+              </div>
+
+              <!-- Human ADHS Meds -->
+              <div class="med-preset-category human-only-section" style="margin-top:10px;">
+                <span class="med-cat-title">🧠 ADHS-Medikamente:</span>
+                <div class="chip-selector-group med-preset-chips" id="medPresetsAdhs">
+                  <button type="button" class="tag-chip med-chip" data-med="Elvanse 30mg">🧠 Elvanse 30mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Elvanse 50mg">🧠 Elvanse 50mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Elvanse 70mg">🧠 Elvanse 70mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Medikinet adult 10mg">🧠 Medikinet 10mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Medikinet adult 20mg">🧠 Medikinet 20mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Medikinet adult 30mg">🧠 Medikinet 30mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Medikinet adult 40mg">🧠 Medikinet 40mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Ritalin Adult 10mg">🧠 Ritalin 10mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Ritalin Adult 20mg">🧠 Ritalin 20mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Concerta 18mg">🧠 Concerta 18mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Concerta 36mg">🧠 Concerta 36mg</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Atomoxetin (Strattera)">🧠 Atomoxetin</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Attentin 5mg">🧠 Attentin 5mg</button>
+                </div>
+              </div>
+
+              <!-- Dog Meds -->
+              <div class="med-preset-category dog-only-section" style="margin-top:10px; display:none;">
+                <span class="med-cat-title">🐕 Hunde-Medikamente & Gelenkschutz:</span>
+                <div class="chip-selector-group med-preset-chips" id="medPresetsDog">
+                  <button type="button" class="tag-chip med-chip" data-med="Metacam / Meloxicam">🐕 Metacam</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Onsior">🐕 Onsior</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Librela Injektion">🐕 Librela Injektion</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Apoquel">🐕 Apoquel</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Cytopoint Spritze">🐕 Cytopoint Spritze</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Previcox">🐕 Previcox</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Traumeel ad us. vet.">🐕 Traumeel</button>
+                  <button type="button" class="tag-chip med-chip" data-med="Zeel ad us. vet.">🐕 Zeel</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-subgroup">
+              <label class="input-label" for="medicationInput">Eingenommene Medikamente / Dosierung:</label>
+              <input type="text" id="medicationInput" class="ios-text-input" placeholder="z.B. Ibuprofen 600mg, Elvanse 50mg, Salben...">
+            </div>
+
+            <div class="form-subgroup">
+              <label class="input-label" for="treatmentInput">Therapien / Maßnahmen:</label>
+              <input type="text" id="treatmentInput" class="ios-text-input" placeholder="z.B. Physiotherapie, Wärmekissen, Schonung, Eispack...">
+            </div>
+
+            <div class="form-subgroup">
+              <label class="input-label" for="notesInput">Persönliche Tagesnotizen & Auslöser:</label>
+              <textarea id="notesInput" class="ios-textarea" rows="3" placeholder="Besonderheiten, Auslöser, Wetterfühligkeit, Wohlbefinden..."></textarea>
+            </div>
+          </div>
+
+          <!-- SAVE & STATUS BAR -->
+          <div class="bottom-action-container">
+            <button type="submit" class="save-primary-btn" id="btnSaveEntry">
+              <span class="btn-icon">💾</span>
+              <span class="btn-text">Eintrag für dieses Datum speichern</span>
+            </button>
+            <div class="save-status-msg" id="saveStatusMsg"></div>
+          </div>
+        </form>
+      </section>
+
+      <!-- TAB 2: CALENDAR & TIMELINE HISTORY (2016 - 2026) -->
+      <section id="tab-history" class="tab-view">
+        <div class="history-controls-card card ios-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="card-icon">📚</span>
+              <h2 class="card-title">Chronik & Archiv (ab 2016)</h2>
+            </div>
+          </div>
+
+          <!-- Filter & Search Bar -->
+          <div class="history-filter-row">
+            <input type="search" id="historySearchInput" class="ios-search-input" placeholder="🔍 Nach Symptom, Schmerz, Notiz suchen...">
+          </div>
+
+          <div class="filter-chips-row">
+            <button class="filter-pill active" data-filter-profile="all">Alle Profile</button>
+            <button class="filter-pill" data-filter-profile="human">👤 Ich</button>
+            <button class="filter-pill" data-filter-profile="buddy">🐕 Buddy</button>
+            <button class="filter-pill" data-filter-profile="milla">🐩 Milla</button>
+            <button class="filter-pill" data-filter-profile="bella">🐶 Bella</button>
+          </div>
+
+          <div class="filter-chips-row secondary-filter">
+            <button class="filter-pill mini active" data-filter-severity="all">Alle Stärken</button>
+            <button class="filter-pill mini" data-filter-severity="high">Stark (7-10)</button>
+            <button class="filter-pill mini" data-filter-severity="photos">Nur mit Fotos 📷</button>
+            <button class="filter-pill mini" data-filter-severity="heat">Nur Läufigkeit 🌸</button>
+          </div>
+        </div>
+
+        <!-- History List Entries -->
+        <div class="history-list-container" id="historyListContainer">
+          <div class="empty-state">
+            <span class="empty-icon">📅</span>
+            <p>Keine Einträge für die aktuelle Filterung gefunden.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: ANALYSIS & WEATHER CORRELATIONS (UV, PRESSURE, PAIN) -->
+      <section id="tab-analytics" class="tab-view">
+        <div class="analytics-header-card card ios-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="card-icon">📊</span>
+              <h2 class="card-title">Schmerz- & Wetter-Analyse</h2>
+            </div>
+          </div>
+          <p class="section-hint">Zusammenhänge zwischen Schmerzintensität, UV-Index, Luftdruck und Temperatur in 93047 Regensburg:</p>
+
+          <!-- Correlation Metrics Cards -->
+          <div class="stats-overview-grid">
+            <div class="stat-box">
+              <span class="stat-number" id="statTotalEntries">0</span>
+              <span class="stat-title">Einträge gesamt</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-number" id="statAvgPain">0.0</span>
+              <span class="stat-title">Ø Schmerzgrad</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-number" id="statUvCorrelation">--</span>
+              <span class="stat-title">UV-Index Korrelation</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-number" id="statPressureCorrelation">--</span>
+              <span class="stat-title">Wetterfühligkeit (Druck)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Canvas Chart Container -->
+        <div class="chart-card card ios-card">
+          <div class="card-header">
+            <h3 class="card-subtitle">Verlauf über Zeit (Schmerz vs. UV & Wetter)</h3>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="correlationChart" height="240"></canvas>
+          </div>
+        </div>
+
+        <!-- Top Symptoms Breakdown -->
+        <div class="breakdown-card card ios-card">
+          <div class="card-header">
+            <h3 class="card-subtitle">Häufigste Einschränkungen & Symptome</h3>
+          </div>
+          <div id="topSymptomsList" class="symptoms-bar-list"></div>
+        </div>
+      </section>
+
+      <!-- TAB 4: EXPORT, ARZTBERICHT & BACKUP -->
+      <section id="tab-export" class="tab-view">
+        <div class="card ios-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="card-icon">📋</span>
+              <h2 class="card-title">Arzt- & Tierarzt-Bericht</h2>
+            </div>
+          </div>
+          <p class="section-hint">Erstellen Sie einen sauberen, druckfertigen Bericht für Ihren Arztbesuch oder den Tierarzt:</p>
+
+          <div class="report-generator-box">
+            <div class="form-subgroup">
+              <label class="input-label">Berichtszeitraum wählen:</label>
+              <div class="date-range-inputs">
+                <input type="date" id="exportStartDate" min="2016-01-01" class="ios-text-input">
+                <span class="range-separator">bis</span>
+                <input type="date" id="exportEndDate" class="ios-text-input">
+              </div>
+            </div>
+
+            <div class="form-subgroup">
+              <label class="input-label">Profil für den Bericht:</label>
+              <select id="exportProfileSelect" class="ios-select">
+                <option value="all">Alle Profile (Zusammenfassung)</option>
+                <option value="human">Ich (Mensch - Haut & Schmerz)</option>
+                <option value="buddy">Buddy (Hund)</option>
+                <option value="milla">Milla (Hündin inkl. Läufigkeit)</option>
+                <option value="bella">Bella (Hündin inkl. Läufigkeit)</option>
+              </select>
+            </div>
+
+            <div class="export-btn-group">
+              <button class="primary-action-btn" id="btnGenerateReport">
+                <span>🖨️ Druck- / PDF-Bericht öffnen</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Local Backup & Restore -->
+        <div class="card ios-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="card-icon">💾</span>
+              <h2 class="card-title">Datensicherung & Wiederherstellung</h2>
+            </div>
+          </div>
+          <p class="section-hint">Ihre Daten & Fotos liegen zu 100% sicher auf Ihrem Gerät (IndexedDB). Sie können jederzeit eine vollständige Sicherung exportieren:</p>
+
+          <div class="backup-actions-grid">
+            <button class="backup-btn" id="btnExportBackup">
+              <span class="btn-emoji">📤</span>
+              <div class="btn-info">
+                <strong>Komplettes Backup exportieren</strong>
+                <span>JSON-Datei mit allen Einträgen & Fotos</span>
+              </div>
+            </button>
+
+            <label class="backup-btn" for="importBackupFile">
+              <span class="btn-emoji">📥</span>
+              <div class="btn-info">
+                <strong>Backup wiederherstellen</strong>
+                <span>JSON-Sicherungsdatei importieren</span>
+              </div>
+              <input type="file" id="importBackupFile" accept=".json" style="display:none;">
+            </label>
+          </div>
+        </div>
+
+        <!-- App Info & Installation Hint -->
+        <div class="card ios-card info-card">
+          <h3>📱 Als iOS-App auf dem iPhone installieren</h3>
+          <ol class="ios-install-steps">
+            <li>Öffnen Sie diese Seite im <strong>Safari Browser</strong> auf Ihrem iPhone.</li>
+            <li>Tippen Sie unten in der Safari-Leiste auf den <strong>Teilen-Button (Viereck mit Pfeil nach oben)</strong>.</li>
+            <li>Wählen Sie <strong>"Zum Home-Bildschirm"</strong>.</li>
+            <li>Nun startet die App wie eine echte iOS-App im Vollbildmodus und funktioniert auch offline!</li>
+          </ol>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom iOS Tab Navigation Bar -->
+    <nav class="ios-tab-bar">
+      <button class="tab-item active" data-tab="entry">
+        <span class="tab-icon">✍️</span>
+        <span class="tab-label">Tagebuch</span>
+      </button>
+      <button class="tab-item" data-tab="history">
+        <span class="tab-icon">📅</span>
+        <span class="tab-label">Chronik</span>
+      </button>
+      <button class="tab-item" data-tab="analytics">
+        <span class="tab-icon">📊</span>
+        <span class="tab-label">Analyse</span>
+      </button>
+      <button class="tab-item" data-tab="export">
+        <span class="tab-icon">📑</span>
+        <span class="tab-label">Bericht</span>
+      </button>
+    </nav>
+
+    <!-- Interactive Date & Calendar Modal -->
+    <div class="modal-overlay" id="calendarModal" style="display: none;">
+      <div class="modal-content calendar-modal-content">
+        <div class="calendar-modal-header">
+          <div class="calendar-nav-controls">
+            <button type="button" class="cal-nav-btn" id="calPrevMonth" title="Vorheriger Monat">◀</button>
+            <div class="cal-month-year-title">
+              <select id="calMonthSelect" class="cal-select"></select>
+              <select id="calYearSelect" class="cal-select"></select>
+            </div>
+            <button type="button" class="cal-nav-btn" id="calNextMonth" title="Nächster Monat">▶</button>
+          </div>
+          <button type="button" class="modal-close-btn" id="btnCloseCalendarModal">✕</button>
+        </div>
+
+        <!-- Quick Year Jump Bar for past documentation -->
+        <div class="cal-quick-years" id="calQuickYears"></div>
+
+        <!-- Weekdays Header -->
+        <div class="calendar-weekdays">
+          <span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span>
+        </div>
+
+        <!-- Calendar Days Grid -->
+        <div class="calendar-days-grid" id="calendarDaysGrid"></div>
+
+        <!-- Calendar Footer -->
+        <div class="calendar-modal-footer">
+          <button type="button" class="btn-cal-action secondary" id="btnCalGoToday">📅 Heute</button>
+          <div class="cal-legend">
+            <span class="cal-dot-legend"></span> <span>Eintrag vorhanden</span>
+          </div>
+          <button type="button" class="btn-cal-action primary" id="btnCalClose">Fertig</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Photo Modal for Fullscreen View & Zoom -->
+    <div class="modal-overlay" id="photoModal" style="display: none;">
+      <div class="modal-content photo-modal-content">
+        <button class="modal-close-btn" id="btnClosePhotoModal">✕</button>
+        <img id="photoModalImg" src="" alt="Vollbild Vorschau">
+        <div class="photo-modal-caption" id="photoModalCaption"></div>
+      </div>
+    </div>
+
+    <!-- Printable Medical Report Modal -->
+    <div class="modal-overlay print-modal-overlay" id="reportModal" style="display: none;">
+      <div class="modal-content report-modal-content">
+        <div class="report-modal-header no-print">
+          <h2>Arzt- & Tierarztbericht</h2>
+          <div class="report-actions">
+            <button class="btn-print" id="btnPrintReport">🖨️ Drucken / Als PDF speichern</button>
+            <button class="modal-close-btn" id="btnCloseReportModal">✕</button>
+          </div>
+        </div>
+        <div class="printable-report-body" id="printableReportBody"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/db.js"></script>
+  <script src="js/weather.js"></script>
+  <script src="js/bodyMap.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW reg error:', err));
+      });
+    }
+  </script>
+</body>
+</html>
