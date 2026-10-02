@@ -197,8 +197,14 @@ class SymptomApp {
       exportEndDate: document.getElementById('exportEndDate'),
       exportProfileSelect: document.getElementById('exportProfileSelect'),
       btnGenerateReport: document.getElementById('btnGenerateReport'),
+      btnRestoreEmbeddedBackup: document.getElementById('btnRestoreEmbeddedBackup'),
       btnExportBackup: document.getElementById('btnExportBackup'),
       importBackupFile: document.getElementById('importBackupFile'),
+      btnOpenPasteBackupModal: document.getElementById('btnOpenPasteBackupModal'),
+      pasteBackupContainer: document.getElementById('pasteBackupContainer'),
+      pasteBackupText: document.getElementById('pasteBackupText'),
+      btnApplyPasteBackup: document.getElementById('btnApplyPasteBackup'),
+      btnCancelPasteBackup: document.getElementById('btnCancelPasteBackup'),
       reportModal: document.getElementById('reportModal'),
       printableReportBody: document.getElementById('printableReportBody'),
       btnPrintReport: document.getElementById('btnPrintReport'),
@@ -1809,6 +1815,25 @@ class SymptomApp {
       this.dom.reportModal.style.display = 'none';
     });
 
+    // 1-Click Restore of Embedded Backup
+    if (this.dom.btnRestoreEmbeddedBackup) {
+      this.dom.btnRestoreEmbeddedBackup.addEventListener('click', async () => {
+        try {
+          await window.symptomDB.importFullBackup(USER_EMBEDDED_BACKUP);
+          this.currentProfile = 'human';
+          this.currentDate = '2026-08-14';
+          this.dom.currentDateInput.value = this.currentDate;
+          this.updateDateDisplay();
+          await this.loadDateAndProfileData();
+          alert('✓ Sicherung erfolgreich wiederhergestellt!\n\nEintrag vom 14. August 2026 (Schub, Cyndaclin, Zugsalbe, Ibuprofen/Tilidin) und Wetterarchiv wurden geladen.');
+          this.switchTab('entry');
+        } catch (err) {
+          console.error('Embedded restore error:', err);
+          alert('❌ Fehler beim Wiederherstellen.');
+        }
+      });
+    }
+
     // Backup Export
     this.dom.btnExportBackup.addEventListener('click', async () => {
       const backup = await window.symptomDB.exportFullBackup();
@@ -1821,12 +1846,12 @@ class SymptomApp {
       URL.revokeObjectURL(url);
     });
 
-    // Backup Import
-    this.dom.importBackupFile.addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
+    // Backup Import via File Picker
+    if (this.dom.importBackupFile) {
+      this.dom.importBackupFile.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
 
-      if (confirm('Möchten Sie dieses Backup importieren? Bestehende Einträge werden ergänzt / aktualisiert.')) {
         const reader = new FileReader();
         reader.onload = async (evt) => {
           try {
@@ -1836,12 +1861,51 @@ class SymptomApp {
             await this.loadDateAndProfileData();
           } catch (err) {
             console.error('Import error:', err);
-            alert('❌ Ungültige Backup-Datei.');
+            alert('❌ Ungültige Backup-Datei: ' + err.message);
           }
         };
         reader.readAsText(file);
-      }
-    });
+      });
+    }
+
+    // Paste JSON Backup Text
+    if (this.dom.btnOpenPasteBackupModal) {
+      this.dom.btnOpenPasteBackupModal.addEventListener('click', () => {
+        const isHidden = this.dom.pasteBackupContainer.style.display === 'none';
+        this.dom.pasteBackupContainer.style.display = isHidden ? 'block' : 'none';
+        if (isHidden && this.dom.pasteBackupText) {
+          this.dom.pasteBackupText.focus();
+        }
+      });
+    }
+
+    if (this.dom.btnCancelPasteBackup) {
+      this.dom.btnCancelPasteBackup.addEventListener('click', () => {
+        this.dom.pasteBackupContainer.style.display = 'none';
+      });
+    }
+
+    if (this.dom.btnApplyPasteBackup) {
+      this.dom.btnApplyPasteBackup.addEventListener('click', async () => {
+        const text = (this.dom.pasteBackupText.value || '').trim();
+        if (!text) {
+          alert('Bitte fügen Sie zuerst Ihren JSON-Sicherungstext ein.');
+          return;
+        }
+
+        try {
+          const data = JSON.parse(text);
+          await window.symptomDB.importFullBackup(data);
+          this.dom.pasteBackupContainer.style.display = 'none';
+          this.dom.pasteBackupText.value = '';
+          alert('✓ Sicherung erfolgreich aus Text wiederhergestellt!');
+          await this.loadDateAndProfileData();
+        } catch (err) {
+          console.error('Text restore error:', err);
+          alert('❌ Fehler beim Verarbeiten des JSON-Textes: ' + err.message);
+        }
+      });
+    }
   }
 
   async generateMedicalReport() {

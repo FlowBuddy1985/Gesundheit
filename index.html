@@ -872,25 +872,51 @@
               <h2 class="card-title">Datensicherung & Wiederherstellung</h2>
             </div>
           </div>
-          <p class="section-hint">Ihre Daten & Fotos liegen zu 100% sicher auf Ihrem Gerät (IndexedDB). Sie können jederzeit eine vollständige Sicherung exportieren:</p>
+          <p class="section-hint">Ihre Daten & Fotos liegen zu 100% sicher auf Ihrem Gerät (IndexedDB). Sie können Sicherungen exportieren oder mit 1 Klick wiederherstellen:</p>
 
           <div class="backup-actions-grid">
+            <button class="backup-btn" id="btnRestoreEmbeddedBackup" style="border-color:rgba(16,185,129,0.4); background:rgba(16,185,129,0.08);">
+              <span class="btn-emoji">⚡</span>
+              <div class="btn-info">
+                <strong style="color:var(--accent-emerald);">1-Klick Wiederherstellen</strong>
+                <span>Gesicherten Datensatz (14.08.2026 Schub) einspielen</span>
+              </div>
+            </button>
+
             <button class="backup-btn" id="btnExportBackup">
               <span class="btn-emoji">📤</span>
               <div class="btn-info">
-                <strong>Komplettes Backup exportieren</strong>
-                <span>JSON-Datei mit allen Einträgen & Fotos</span>
+                <strong>Backup exportieren</strong>
+                <span>JSON-Datei mit allen Einträgen & Fotos herunterladen</span>
               </div>
             </button>
 
             <label class="backup-btn" for="importBackupFile">
               <span class="btn-emoji">📥</span>
               <div class="btn-info">
-                <strong>Backup wiederherstellen</strong>
-                <span>JSON-Sicherungsdatei importieren</span>
+                <strong>JSON-Datei auswählen</strong>
+                <span>Sicherungsdatei vom Gerät laden</span>
               </div>
               <input type="file" id="importBackupFile" accept=".json" style="display:none;">
             </label>
+
+            <button class="backup-btn" id="btnOpenPasteBackupModal">
+              <span class="btn-emoji">📋</span>
+              <div class="btn-info">
+                <strong>JSON-Text einfügen</strong>
+                <span>Backup per Kopieren & Einfügen wiederherstellen</span>
+              </div>
+            </button>
+          </div>
+
+          <!-- Paste JSON Text Area Box (Foldable) -->
+          <div id="pasteBackupContainer" style="display:none; margin-top:14px; padding:12px; border-radius:12px; background:rgba(0,0,0,0.25); border:1px solid var(--border-subtle);">
+            <label class="input-label" style="display:block; margin-bottom:6px; font-weight:700;">JSON-Sicherungstext hier einfügen:</label>
+            <textarea id="pasteBackupText" class="ios-text-input" rows="5" placeholder='{"version":"1.0","entries":[...]}' style="font-family:monospace; font-size:11px; width:100%;"></textarea>
+            <div style="display:flex; gap:10px; margin-top:8px;">
+              <button type="button" id="btnApplyPasteBackup" class="primary-action-btn" style="flex:1; padding:10px; font-size:13px;">✓ Aus Text wiederherstellen</button>
+              <button type="button" id="btnCancelPasteBackup" class="action-sub-btn" style="padding:10px 16px; border-radius:10px; background:rgba(255,255,255,0.08); border:none; color:var(--text-secondary); cursor:pointer;">Abbrechen</button>
+            </div>
           </div>
         </div>
 

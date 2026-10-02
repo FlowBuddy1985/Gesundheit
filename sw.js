@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gesundheit-app-v8';
+const CACHE_NAME = 'gesundheit-app-v9';
 const ASSETS = [
   './',
   './index.html',
