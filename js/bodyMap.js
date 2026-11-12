@@ -17,7 +17,8 @@ class BodyMapManager {
     this.renderHumanBack();
     this.renderDogMap();
     this.attachEvents();
-    this.setupViewControls();
+    thi
+    pViewControls();
     this.updateVisualSelection();
   }
 
@@ -64,7 +65,7 @@ class BodyMapManager {
       'hals_v': 'Hals vorn / Kehle & Schilddrüse',
       'clavicula_li': 'Schlüsselbein (Clavicula) links',
       'clavicula_re': 'Schlüsselbein (Clavicula) rechts',
-      
+
       // Human - Torso Front
       'sternum': 'Brustbein (Sternum)',
       'brust_li': 'Brustkorb / Muskel links',
@@ -126,7 +127,7 @@ class BodyMapManager {
       'isg_kreuzbein': 'ISG (Iliosakralgelenk) & Kreuzbein',
       'gesaess_li': 'Gesäß / Gluteus links',
       'gesaess_re': 'Gesäß / Gluteus rechts',
-      
+
       // Human - Arme Back
       'oberarm_li_h': 'Oberarm hinten / Trizeps links',
       'oberarm_re_h': 'Oberarm hinten / Trizeps rechts',

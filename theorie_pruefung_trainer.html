@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TÜV Theorie-Trainer Klasse B & Anhänger | Offizielle Prüfungsfragen & Bildsimulation 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(22, 30, 46, 0.88);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover: rgba(99, 102, 241, 0.35);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.15);
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.15);
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.15);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      background: radial-gradient(circle at 10% 10%, #111827 0%, #090d16 100%);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.55;
+      padding-bottom: 60px;
+    }
+
+    /* TOP HEADER */
+    header {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0.8rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .logo-badge {
+      font-size: 0.72rem;
+      background: linear-gradient(135deg, var(--primary), #a855f7);
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .nav-tabs {
+      display: flex;
+      gap: 0.5rem;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 0.3rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--card-border);
+      overflow-x: auto;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.45rem 0.9rem;
+      font-size: 0.86rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: #fff; }
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+    }
+
+    /* MAIN CONTAINER */
+    .container {
+      max-width: 1080px;
+      margin: 1.5rem auto;
+      padding: 0 1rem;
+    }
+
+    /* EXAM STATUS BAR */
+    .exam-header {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .stat-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .stat-pill strong { color: #fff; font-family: var(--font-mono); }
+    .error-points-counter {
+      font-size: 1.05rem;
+      font-weight: 700;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--card-border);
+    }
+    .error-points-counter.safe { color: var(--success); border-color: rgba(16, 185, 129, 0.4); }
+    .error-points-counter.danger { color: var(--danger); border-color: rgba(239, 68, 68, 0.4); }
+
+    /* QUESTION NAVIGATOR */
+    .question-navigator {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 1.5rem;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 0.85rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--card-border);
+    }
+    .nav-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .nav-dot:hover { border-color: var(--primary); color: #fff; transform: translateY(-2px); }
+    .nav-dot.current {
+      background: var(--primary);
+      border-color: #818cf8;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
+    }
+    .nav-dot.answered {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .nav-dot.correct { background: var(--success-bg); border-color: var(--success); color: var(--success); }
+    .nav-dot.wrong { background: var(--danger-bg); border-color: var(--danger); color: var(--danger); }
+
+    /* QUESTION CARD */
+    .question-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+      margin-bottom: 1.5rem;
+    }
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.8rem;
+    }
+    .category-badge {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--primary);
+      background: rgba(99, 102, 241, 0.15);
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+    }
+    .points-badge {
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+    .question-text {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1.25rem;
+      line-height: 1.35;
+    }
+
+    /* SCENARIO IMAGE BOX (AUTHENTIC TÜV EXAM SCREEN) */
+    .scenario-box {
+      background: #0b1120;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      padding: 1.2rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    .scenario-svg-wrapper {
+      max-width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .scenario-svg-wrapper svg {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .scenario-caption {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+      font-weight: 500;
+      background: rgba(15, 23, 42, 0.7);
+      padding: 0.3rem 0.8rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* ANSWERS */
+    .answers-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.8rem;
+    }
+    .answer-item {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1.5px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .answer-item:hover {
+      border-color: var(--card-hover);
+      background: rgba(99, 102, 241, 0.05);
+    }
+    .answer-item.selected {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.15);
+    }
+    .answer-item.correct {
+      border-color: var(--success);
+      background: var(--success-bg);
+    }
+    .answer-item.wrong {
+      border-color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    .custom-check {
+      min-width: 22px;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+      transition: all 0.15s ease;
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+    .answer-item.selected .custom-check {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #fff;
+    }
+    .answer-item.correct .custom-check {
+      border-color: var(--success);
+      background: var(--success);
+      color: #fff;
+    }
+    .answer-item.wrong .custom-check {
+      border-color: var(--danger);
+      background: var(--danger);
+      color: #fff;
+    }
+    .answer-label {
+      font-size: 0.98rem;
+      color: #cbd5e1;
+      line-height: 1.45;
+    }
+    .answer-item.selected .answer-label { color: #fff; font-weight: 600; }
+
+    /* NUMBER INPUT ANSWER */
+    .number-input-box {
+      margin-bottom: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 1.2rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--card-border);
+    }
+    .formula-input {
+      background: #0f172a;
+      border: 2px solid var(--primary);
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+      width: 140px;
+      text-align: center;
+    }
+    .formula-unit {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    /* EXPLANATION BOX */
+    .explanation-box {
+      background: rgba(99, 102, 241, 0.1);
+      border-left: 4px solid var(--primary);
+      padding: 1rem 1.25rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin-bottom: 1.5rem;
+      font-size: 0.92rem;
+      color: #c7d2fe;
+      display: none;
+    }
+
+    /* CONTROLS */
+    .controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .btn {
+      padding: 0.75rem 1.4rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.92rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border: 1px solid var(--card-border);
+    }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-1px); }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    }
+    .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .btn-success {
+      background: var(--success);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+    }
+    .btn-success:hover { background: #059669; }
+
+    /* EVALUATION / SCORE CARD */
+    .evaluation-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      display: none;
+    }
+    .result-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 1.5rem;
+      border-radius: 999px;
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .result-passed {
+      background: var(--success-bg);
+      color: #34d399;
+      border: 2px solid var(--success);
+    }
+    .result-failed {
+      background: var(--danger-bg);
+      color: #f87171;
+      border: 2px solid var(--danger);
+    }
+
+    /* TOOLS VIEW */
+    .tool-view { display: none; }
+    .cheat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .cheat-title {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .formula-formula {
+      font-family: var(--font-mono);
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--card-border);
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      font-size: 1.15rem;
+      color: #818cf8;
+      margin: 0.75rem 0;
+      display: inline-block;
+    }
+    .calc-box {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--primary);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+    .calc-slider { width: 100%; margin: 1rem 0; }
+    .calc-result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+    .calc-val-box {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+    }
+    .calc-val-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; }
+    .calc-val-number { font-family: var(--font-mono); font-size: 1.6rem; font-weight: 800; color: #fff; margin-top: 0.2rem; }
+
+    @media (max-width: 640px) {
+      .question-text { font-size: 1.15rem; }
+      .question-card { padding: 1.25rem; }
+      header { flex-direction: column; align-items: flex-start; }
+      .nav-tabs { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header>
+    <div style="display:flex; align-items:center; gap:0.85rem; flex-wrap:wrap;">
+      <a href="index.html" class="tab-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem; background:rgba(255,255,255,0.08); border:1px solid var(--card-border); color:#fff;" title="Zurück zur Tagebuch-App">
+        <span>◀</span> Zurück zur App
+      </a>
+      <div class="logo">
+        <span>🚗 TÜV Theorie-Prüfer</span>
+        <span class="logo-badge">Klasse B & Anhänger • 2026</span>
+      </div>
+    </div>
+    <div class="nav-tabs">
+      <button class="tab-btn active" data-view="exam" onclick="switchView('exam')">📝 Prüfungssimulation (30 Fragen)</button>
+      <button class="tab-btn" data-view="trainer" onclick="switchView('trainer')">🎯 Training nach Themen</button>
+      <button class="tab-btn" data-view="trailer" onclick="switchView('trailer')">🚛 Spezial: Anhänger (Klasse B)</button>
+      <button class="tab-btn" data-view="formulas" onclick="switchView('formulas')">📐 Formeln & Rechner</button>
+      <button class="tab-btn" data-view="mistakes" onclick="switchView('mistakes')">🔁 Falsche Fragen (<span id="mistakeCount">0</span>)</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- VIEW 1: EXAM SIMULATION & PRACTICE -->
+    <section id="examView">
+
+      <!-- HEADER STATS -->
+      <div class="exam-header">
+        <div class="stat-pill">
+          Modus: <strong id="modeLabel">TÜV-Prüfungssimulation</strong>
+        </div>
+        <div class="stat-pill">
+          Frage: <strong id="currentQuestionNum">1</strong> von <strong id="totalQuestionsNum">30</strong>
+        </div>
+        <div class="stat-pill">
+          Fehlerpunkte: <span class="error-points-counter safe" id="errorPointsBadge">0 / max. 10</span>
+        </div>
+        <div>
+          <button class="btn btn-secondary" onclick="restartExam()" title="Neuen Fragebogen zusammenstellen">🔄 Neuer Bogen</button>
+        </div>
+      </div>
+
+      <!-- NAVIGATOR BUTTONS -->
+      <div class="question-navigator" id="questionNav"></div>
+
+      <!-- ACTIVE QUESTION CARD -->
+      <div class="question-card" id="questionCard">
+        <div class="question-meta">
+          <span class="category-badge" id="qCategory">Vorfahrt</span>
+          <span class="points-badge" id="qPoints">5 Fehlerpunkte</span>
+        </div>
+
+        <h2 class="question-text" id="qText">Fragetext lädt...</h2>
+
+        <!-- SCENARIO ILLUSTRATION (SVG EXAM PICTURE) -->
+        <div class="scenario-box" id="scenarioContainer" style="display: none;">
+          <div class="scenario-svg-wrapper" id="scenarioSvg"></div>
+          <div class="scenario-caption" id="scenarioCaption"></div>
+        </div>
+
+        <!-- MULTIPLE CHOICE ANSWERS -->
+        <div class="answers-list" id="answersContainer"></div>
+
+        <!-- NUMERICAL INPUT FOR FORMULA QUESTIONS -->
+        <div class="number-input-box" id="numberInputContainer" style="display: none;">
+          <label for="numInput" style="font-weight: 600;">Ihre berechnete Antwort:</label>
+          <input type="number" id="numInput" class="formula-input" placeholder="0">
+          <span class="formula-unit" id="numUnit">Meter</span>
+        </div>
+
+        <!-- EXPLANATION -->
+        <div class="explanation-box" id="explanationBox"></div>
+
+        <!-- CONTROLS -->
+        <div class="controls-bar">
+          <div>
+            <button class="btn btn-secondary" id="btnPrev" onclick="navigateQuestion(-1)">← Vorherige</button>
+            <button class="btn btn-secondary" id="btnNext" onclick="navigateQuestion(1)">Nächste →</button>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn btn-secondary" id="btnCheck" onclick="checkCurrentAnswer()">💡 Prüfen / Auflösen</button>
+            <button class="btn btn-success" id="btnSubmit" onclick="finishExam()">🏁 Prüfung abgeben</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVALUATION SCREEN -->
+      <div class="evaluation-card" id="evalCard">
+        <div class="result-banner" id="evalBanner">ERGEBNIS</div>
+        <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem;" id="evalScoreText">0 Fehlerpunkte</h3>
+        <p style="color: var(--text-muted); max-width: 650px; margin: 0 auto 1.8rem;" id="evalDetailText">
+          Amtliche TÜV-Regel: Maximal 10 Fehlerpunkte erlaubt. ABER: Wer bei genau 10 Punkten zwei 5-Punkte-Fragen falsch beantwortet hat, hat die Prüfung NICHT bestanden!
+        </p>
+
+        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+          <button class="btn btn-primary" onclick="restartExam()">🔄 Neue Prüfung starten</button>
+          <button class="btn btn-secondary" onclick="reviewExamMistakes()">🔍 Nur Fehler ansehen</button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- VIEW 2: FORMULAS & INTERACTIVE CALCULATOR -->
+    <section id="formulasView" class="tool-view">
+      <div class="cheat-card">
+        <div class="cheat-title">📐 Das 1x1 der Prüfungsformeln (TÜV-Standard)</div>
+        <p style="color: var(--text-muted);">
+          Diese 4 Faustformeln kommen garantiert in der theoretischen Prüfung vor:
+        </p>
+
+        <div style="margin-top: 1.5rem;">
+          <h4>1. Reaktionsweg (Weg während der Schrecksekunde)</h4>
+          <div class="formula-formula">(Geschwindigkeit in km/h ÷ 10) × 3</div>
+          <p style="font-size: 0.88rem; color: #94a3b8;">Beispiel bei 50 km/h: (50 ÷ 10) × 3 = 5 × 3 = <strong>15 Meter</strong></p>
+        </div>
+
+        <div style="margin-top: 1.5rem;">
+          <h4>2. Bremsweg bei Normalbremsung</h4>
+          <div class="formula-formula">(Geschwindigkeit ÷ 10) × (Geschwindigkeit ÷ 10)</div>
+          <p style="font-size: 0.88rem; color: #94a3b8;">Beispiel bei 50 km/h: (50 ÷ 10) × (50 ÷ 10) = 5 × 5 = <strong>25 Meter</strong></p>
+        </div>
+
+        <div style="margin-top: 1.5rem;">
+          <h4>3. Bremsweg bei Gefahrenbremsung (Vollbremsung)</h4>
+          <div class="formula-formula">Normaler Bremsweg ÷ 2</div>
+          <p style="font-size: 0.88rem; color: #94a3b8;">Beispiel bei 50 km/h: 25 Meter ÷ 2 = <strong>12,5 Meter</strong> (halbiert den Bremsweg!)</p>
+        </div>
+
+        <div style="margin-top: 1.5rem;">
+          <h4>4. Anhalteweg (Gesamter Weg bis zum Stillstand)</h4>
+          <div class="formula-formula">Reaktionsweg + Bremsweg</div>
+          <p style="font-size: 0.88rem; color: #94a3b8;">Beispiel bei 50 km/h Normalbremsung: 15 m + 25 m = <strong>40 Meter</strong></p>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE CALCULATOR -->
+      <div class="cheat-card">
+        <div class="cheat-title">🧮 Interaktiver Bremsweg-Simulator</div>
+        <p style="color: var(--text-muted);">Stellen Sie die Geschwindigkeit ein und sehen Sie sofort alle Prüfungsmaße:</p>
+
+        <div class="calc-box">
+          <label style="font-weight: 700; font-size: 1.1rem; display: flex; justify-content: space-between;">
+            <span>Geschwindigkeit:</span>
+            <span style="color: #818cf8; font-family: var(--font-mono); font-size: 1.4rem;" id="sliderSpeedVal">50 km/h</span>
+          </label>
+          <input type="range" min="10" max="200" step="10" value="50" class="calc-slider" id="speedSlider" oninput="updateCalculator(this.value)">
+
+          <div class="calc-result-grid">
+            <div class="calc-val-box">
+              <div class="calc-val-label">1. Reaktionsweg</div>
+              <div class="calc-val-number" id="calcReaktion">15 m</div>
+              <small style="color: var(--text-muted);">(v ÷ 10) × 3</small>
+            </div>
+            <div class="calc-val-box">
+              <div class="calc-val-label">2. Bremsweg (Normal)</div>
+              <div class="calc-val-number" id="calcBremsNormal">25 m</div>
+              <small style="color: var(--text-muted);">(v ÷ 10) × (v ÷ 10)</small>
+            </div>
+            <div class="calc-val-box">
+              <div class="calc-val-label">3. Gefahrenbremsung</div>
+              <div class="calc-val-number" id="calcBremsGefahr" style="color: #34d399;">12.5 m</div>
+              <small style="color: var(--text-muted);">Bremsweg ÷ 2</small>
+            </div>
+            <div class="calc-val-box" style="border-color: var(--primary);">
+              <div class="calc-val-label" style="color: #818cf8;">4. Anhalteweg (Gesamt)</div>
+              <div class="calc-val-number" id="calcAnhalteweg" style="color: #818cf8;">40 m</div>
+              <small style="color: var(--text-muted);">Reaktion + Normalbremsung</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: THEME TRAINING PICKER -->
+    <section id="trainerTopicsView" class="tool-view">
+      <div class="cheat-card">
+        <div class="cheat-title">🎯 Gezieltes Training nach Schwerpunkten</div>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+          Wählen Sie ein Themengebiet aus, um alle dazugehörigen Fragen mit Bildsimulation zu üben:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
+          <button class="btn btn-secondary" onclick="startTopicTraining('Vorfahrt')" style="padding: 1.2rem; flex-direction: column; align-items: flex-start;">
+            <strong style="font-size: 1.1rem; color: #fff;">🚦 Vorfahrt & Kreuzungen</strong>
+            <small style="color: var(--text-muted);">Rechts vor Links, Abknickend, Schilder</small>
+          </button>
+          <button class="btn btn-secondary" onclick="startTopicTraining('Anhänger')" style="padding: 1.2rem; flex-direction: column; align-items: flex-start; border-color: #818cf8;">
+            <strong style="font-size: 1.1rem; color: #818cf8;">🚛 Klasse B mit Anhänger</strong>
+            <small style="color: var(--text-muted);">3.500 kg zGM, Abreißseil, Stützlast, Schleppkurve</small>
+          </button>
+          <button class="btn btn-secondary" onclick="startTopicTraining('Formeln')" style="padding: 1.2rem; flex-direction: column; align-items: flex-start;">
+            <strong style="font-size: 1.1rem; color: #fff;">📐 Zahlen & Formeln</strong>
+            <small style="color: var(--text-muted);">Bremsweg, Reaktionsweg, Abstände</small>
+          </button>
+          <button class="btn btn-secondary" onclick="startTopicTraining('Verkehrsrecht')" style="padding: 1.2rem; flex-direction: column; align-items: flex-start;">
+            <strong style="font-size: 1.1rem; color: #fff;">⚖️ Recht, CanG & Alkohol</strong>
+            <small style="color: var(--text-muted);">3,5 ng/ml Grenzwert, Mischkonsum, Promille</small>
+          </button>
+          <button class="btn btn-secondary" onclick="startTopicTraining('Verhalten')" style="padding: 1.2rem; flex-direction: column; align-items: flex-start;">
+            <strong style="font-size: 1.1rem; color: #fff;">🛡️ Gefahrenlehre & Verhalten</strong>
+            <small style="color: var(--text-muted);">Überholabstand 1,5m, Rettungsgasse, Busse</small>
+          </button>
+          <button class="btn btn-secondary" onclick="startTopicTraining('Technik')" style="padding: 1.2rem; flex-direction: column; align-items: flex-start;">
+            <strong style="font-size: 1.1rem; color: #fff;">⚙️ Technik & Umwelt</strong>
+            <small style="color: var(--text-muted);">ABS, ESP, Reifendruck, Beleuchtung</small>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // ==========================================
+    // SVG PRÜFUNGSBILDER (OFFIZIELLES TÜV-LAYOUT)
+    // ==========================================
+    const svgImages = {
+      // 1. Kreuzung Rechts vor Links
+      rechtsVorLinks: `
+        <svg viewBox="0 0 400 260" width="380" height="247">
+          <rect width="400" height="260" fill="#1e293b"/>
+          <!-- Roads -->
+          <rect x="0" y="90" width="400" height="80" fill="#334155"/>
+          <rect x="160" y="0" width="80" height="260" fill="#334155"/>
+          <!-- Road Markings -->
+          <line x1="0" y1="130" x2="160" y2="130" stroke="#f8fafc" stroke-width="2" stroke-dasharray="8 6"/>
+          <line x1="240" y1="130" x2="400" y2="130" stroke="#f8fafc" stroke-width="2" stroke-dasharray="8 6"/>
+          <line x1="200" y1="0" x2="200" y2="90" stroke="#f8fafc" stroke-width="2" stroke-dasharray="8 6"/>
+          <line x1="200" y1="170" x2="200" y2="260" stroke="#f8fafc" stroke-width="2" stroke-dasharray="8 6"/>
+          <!-- Red Car (from Left) -->
+          <rect x="70" y="138" width="40" height="22" rx="4" fill="#ef4444"/>
+          <circle cx="80" cy="136" r="3" fill="#000"/><circle cx="100" cy="136" r="3" fill="#000"/>
+          <text x="90" y="153" font-size="9" font-family="sans-serif" font-weight="bold" fill="#fff" text-anchor="middle">ROT</text>
+          <!-- Yellow Car (from Right) -->
+          <rect x="290" y="100" width="40" height="22" rx="4" fill="#eab308"/>
+          <circle cx="300" cy="98" r="3" fill="#000"/><circle cx="320" cy="98" r="3" fill="#000"/>
+          <text x="310" y="115" font-size="9" font-family="sans-serif" font-weight="bold" fill="#000" text-anchor="middle">GELB</text>
+          <!-- Own Car (Bottom, Green) -->
+          <rect x="208" y="200" width="22" height="42" rx="4" fill="#10b981"/>
+          <circle cx="206" cy="210" r="3" fill="#000"/><circle cx="206" cy="232" r="3" fill="#000"/>
+          <text x="219" y="225" font-size="8" font-family="sans-serif" font-weight="bold" fill="#fff" text-anchor="middle">ICH</text>
+          <!-- Arrow Rechts vor Links -->
+          <path d="M 285 111 L 225 111" stroke="#eab308" stroke-width="3" marker-end="url(#arrow)" fill="none"/>
+          <text x="200" y="20" font-size="12" font-weight="bold" fill="#cbd5e1" text-anchor="middle">Situation: Kreuzung ohne Verkehrszeichen</text>
+        </svg>
+      `,
+
+      // 2. Abknickende Vorfahrt
+      abknickendeVorfahrt: `
+        <svg viewBox="0 0 400 260" width="380" height="247">
+          <rect width="400" height="260" fill="#1e293b"/>
+          <rect x="0" y="90" width="400" height="80" fill="#334155"/>
+          <rect x="160" y="0" width="80" height="260" fill="#334155"/>
+          <!-- Priority curve marking (thick curve bottom to left) -->
+          <path d="M 200 260 Q 200 130 0 130" stroke="#f8fafc" stroke-width="12" fill="none"/>
+          <path d="M 200 260 Q 200 130 0 130" stroke="#fbbf24" stroke-width="8" fill="none"/>
+          <!-- Sign 306 with supplementary sign -->
+          <g transform="translate(255, 175) scale(0.65)">
+            <rect x="0" y="0" width="50" height="50" rx="3" transform="rotate(45 25 25)" fill="#f8fafc" stroke="#000" stroke-width="2"/>
+            <rect x="8" y="8" width="34" height="34" rx="2" transform="rotate(45 25 25)" fill="#fbbf24"/>
+            <!-- Addon sign -->
+            <rect x="-8" y="58" width="66" height="48" rx="3" fill="#f8fafc" stroke="#000" stroke-width="2"/>
+            <line x1="25" y1="62" x2="25" y2="102" stroke="#94a3b8" stroke-width="3"/>
+            <line x1="-4" y1="82" x2="54" y2="82" stroke="#94a3b8" stroke-width="3"/>
+            <!-- Priority curve on sign -->
+            <path d="M 25 102 Q 25 82 -4 82" stroke="#000" stroke-width="6" fill="none"/>
+          </g>
+          <!-- Own Car (Green, wants to follow priority to left) -->
+          <rect x="208" y="215" width="22" height="38" rx="4" fill="#10b981"/>
+          <text x="219" y="238" font-size="8" font-weight="bold" fill="#fff" text-anchor="middle">ICH</text>
+          <!-- Blinker animation hint -->
+          <circle cx="206" cy="217" r="4" fill="#fbbf24"/>
+          <!-- Yellow car waiting from right on side street -->
+          <rect x="280" y="102" width="38" height="22" rx="4" fill="#eab308"/>
+          <text x="299" y="116" font-size="8" font-weight="bold" fill="#000" text-anchor="middle">GELB</text>
+          <text x="200" y="22" font-size="11" font-weight="bold" fill="#cbd5e1" text-anchor="middle">Abknickende Vorfahrtstraße nach links</text>
+        </svg>
+      `,
+
+      // 3. Überholabstand Radfahrer (Cockpit Ansicht)
+      abstandRad: `
+        <svg viewBox="0 0 400 240" width="380" height="228">
+          <rect width="400" height="240" fill="#0284c7"/>
+          <!-- Road horizon -->
+          <polygon points="0,90 400,90 400,240 0,240" fill="#334155"/>
+          <line x1="200" y1="90" x2="160" y2="240" stroke="#f8fafc" stroke-width="2" stroke-dasharray="10 8"/>
+          <!-- Cyclist ahead -->
+          <g transform="translate(240, 105)">
+            <circle cx="12" cy="6" r="5" fill="#f87171"/>
+            <line x1="12" y1="11" x2="12" y2="25" stroke="#f87171" stroke-width="3"/>
+            <line x1="5" y1="35" x2="19" y2="35" stroke="#000" stroke-width="3"/>
+            <circle cx="6" cy="35" r="7" stroke="#000" stroke-width="2" fill="none"/>
+            <circle cx="18" cy="35" r="7" stroke="#000" stroke-width="2" fill="none"/>
+          </g>
+          <!-- Oncoming car in distance -->
+          <rect x="120" y="98" width="16" height="10" fill="#ef4444" rx="2"/>
+          <!-- Cockpit dashboard / Hood -->
+          <path d="M 0 195 Q 200 170 400 195 L 400 240 L 0 240 Z" fill="#0f172a"/>
+          <!-- Steering wheel top -->
+          <path d="M 140 240 Q 200 185 260 240" stroke="#334155" stroke-width="12" fill="none"/>
+          <!-- Measurement Arrow -->
+          <g transform="translate(190, 150)">
+            <line x1="0" y1="0" x2="60" y2="0" stroke="#fbbf24" stroke-width="2"/>
+            <polygon points="0,-3 -6,0 0,3" fill="#fbbf24"/>
+            <polygon points="60,-3 66,0 60,3" fill="#fbbf24"/>
+            <rect x="6" y="-14" width="50" height="12" rx="3" fill="#000"/>
+            <text x="31" y="-5" font-size="8" font-family="sans-serif" font-weight="bold" fill="#fbbf24" text-anchor="middle">≥ 1,5 m</text>
+          </g>
+          <text x="200" y="20" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">Blick durch die Windschutzscheibe (Innerorts)</text>
+        </svg>
+      `,
+
+      // 4. Haltestelle Bus mit Warnblinker
+      busHaltestelle: `
+        <svg viewBox="0 0 400 240" width="380" height="228">
+          <rect width="400" height="240" fill="#0f172a"/>
+          <polygon points="0,85 400,85 400,240 0,240" fill="#334155"/>
+          <line x1="200" y1="85" x2="180" y2="240" stroke="#f8fafc" stroke-width="3" stroke-dasharray="10 8"/>
+          <!-- Bus on right lane -->
+          <rect x="235" y="80" width="75" height="75" rx="6" fill="#3b82f6"/>
+          <!-- Bus windows & roof -->
+          <rect x="242" y="86" width="60" height="28" rx="3" fill="#93c5fd"/>
+          <rect x="245" y="125" width="25" height="12" rx="2" fill="#fff"/>
+          <text x="257" y="134" font-size="7" font-weight="bold" fill="#000" text-anchor="middle">BUS</text>
+          <!-- Hazard lights blinking (Orange) -->
+          <circle cx="239" cy="142" r="5" fill="#f59e0b"/>
+          <circle cx="306" cy="142" r="5" fill="#f59e0b"/>
+          <!-- Sign Haltestelle H -->
+          <g transform="translate(325, 65)">
+            <line x1="12" y1="20" x2="12" y2="80" stroke="#64748b" stroke-width="2"/>
+            <circle cx="12" cy="20" r="14" fill="#fef08a" stroke="#15803d" stroke-width="3"/>
+            <text x="12" y="26" font-size="16" font-weight="bold" fill="#15803d" text-anchor="middle">H</text>
+          </g>
+          <!-- Cockpit hood -->
+          <path d="M 0 195 Q 200 175 400 195 L 400 240 L 0 240 Z" fill="#0f172a"/>
+          <text x="200" y="20" font-size="11" font-weight="bold" fill="#cbd5e1" text-anchor="middle">Linienbus steht mit Warnblinklicht an der Haltestelle</text>
+        </svg>
+      `,
+
+      // 5. Autobahn Rettungsgasse
+      rettungsgasse: `
+        <svg viewBox="0 0 400 240" width="380" height="228">
+          <rect width="400" height="240" fill="#1e293b"/>
+          <!-- 3 Lanes -->
+          <rect x="30" y="40" width="340" height="190" fill="#334155"/>
+          <line x1="140" y1="40" x2="140" y2="230" stroke="#f8fafc" stroke-width="2" stroke-dasharray="10 8"/>
+          <line x1="260" y1="40" x2="260" y2="230" stroke="#f8fafc" stroke-width="2" stroke-dasharray="10 8"/>
+          <!-- Left car (hugging left barrier) -->
+          <rect x="40" y="110" width="35" height="60" rx="4" fill="#ef4444"/>
+          <!-- Middle car (hugging right) -->
+          <rect x="185" y="115" width="35" height="60" rx="4" fill="#3b82f6"/>
+          <!-- Right car -->
+          <rect x="295" y="120" width="35" height="60" rx="4" fill="#eab308"/>
+          <!-- Free Rescue Lane -->
+          <rect x="85" y="40" width="90" height="190" fill="rgba(16, 185, 129, 0.15)"/>
+          <text x="130" y="130" font-size="10" font-weight="bold" fill="#34d399" text-anchor="middle" transform="rotate(-90 130 130)">RETTUNGSGASSE</text>
+          <text x="200" y="22" font-size="11" font-weight="bold" fill="#cbd5e1" text-anchor="middle">Stockender Verkehr / Stau auf 3 Fahrstreifen</text>
+        </svg>
+      `,
+
+      // 6. Kreisverkehr mit Zeichen 215 & 205
+      kreisverkehr: `
+        <svg viewBox="0 0 400 240" width="380" height="228">
+          <rect width="400" height="240" fill="#1e293b"/>
+          <!-- Roundabout circle -->
+          <circle cx="200" cy="120" r="75" fill="#334155"/>
+          <circle cx="200" cy="120" r="35" fill="#15803d"/>
+          <!-- Entrance road bottom -->
+          <rect x="180" y="160" width="40" height="80" fill="#334155"/>
+          <!-- Signs at entrance: 205 on top, 215 below -->
+          <g transform="translate(230, 160)">
+            <!-- Sign 205 Vorfahrt gewaehren (upside down triangle) -->
+            <polygon points="12,0 0,22 24,22" fill="#f8fafc" stroke="#dc2626" stroke-width="3"/>
+            <!-- Sign 215 Kreisverkehr (Blue round with 3 arrows) -->
+            <circle cx="12" cy="38" r="11" fill="#2563eb" stroke="#f8fafc" stroke-width="1.5"/>
+            <path d="M 6 38 A 6 6 0 1 1 18 38" stroke="#fff" stroke-width="2" fill="none"/>
+          </g>
+          <!-- Car in circle -->
+          <rect x="185" y="52" width="28" height="16" rx="3" fill="#3b82f6"/>
+          <!-- Own car entering -->
+          <rect x="187" y="200" width="16" height="28" rx="3" fill="#10b981"/>
+          <text x="195" y="218" font-size="7" font-weight="bold" fill="#fff" text-anchor="middle">ICH</text>
+          <text x="200" y="18" font-size="11" font-weight="bold" fill="#cbd5e1" text-anchor="middle">Vorfahrtregelung am Kreisverkehr</text>
+        </svg>
+      `,
+
+      // 7. Ampel mit Grünpfeil-Schild
+      gruenpfeil: `
+        <svg viewBox="0 0 400 240" width="380" height="228">
+          <rect width="400" height="240" fill="#0f172a"/>
+          <!-- Traffic light post & housing -->
+          <line x1="160" y1="40" x2="160" y2="240" stroke="#64748b" stroke-width="6"/>
+          <rect x="140" y="40" width="40" height="100" rx="8" fill="#1e293b" stroke="#000" stroke-width="2"/>
+          <!-- Lights: Red ON, Yellow off, Green off -->
+          <circle cx="160" cy="58" r="11" fill="#ef4444" stroke="#7f1d1d" stroke-width="1.5"/>
+          <circle cx="160" cy="90" r="11" fill="#475569"/>
+          <circle cx="160" cy="122" r="11" fill="#475569"/>
+          <!-- Gruenpfeil sign (Zeichen 720) on the right of red light -->
+          <g transform="translate(188, 45)">
+            <rect x="0" y="0" width="45" height="34" rx="3" fill="#000" stroke="#f8fafc" stroke-width="1.5"/>
+            <path d="M 8 17 L 30 17 M 22 9 L 32 17 L 22 25" stroke="#22c55e" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </g>
+          <!-- Stop line on road -->
+          <rect x="40" y="210" width="320" height="8" fill="#f8fafc"/>
+          <text x="200" y="232" font-size="9" fill="#94a3b8" text-anchor="middle">Haltlinie vor der Kreuzung</text>
+          <text x="200" y="22" font-size="11" font-weight="bold" fill="#cbd5e1" text-anchor="middle">Rote Ampel mit Grünpfeil-Schild (Zeichen 720)</text>
+        </svg>
+      `,
+
+      // 8. Bahnübergang mit Andreaskreuz & Bake
+      bahnuebergang: `
+        <svg viewBox="0 0 400 240" width="380" height="228">
+          <rect width="400" height="240" fill="#1e293b"/>
+          <rect x="0" y="150" width="400" height="90" fill="#334155"/>
+          <!-- Railway tracks crossing -->
+          <line x1="0" y1="180" x2="400" y2="180" stroke="#94a3b8" stroke-width="4"/>
+          <line x1="0" y1="195" x2="400" y2="195" stroke="#94a3b8" stroke-width="4"/>
+          <!-- Andreaskreuz (Zeichen 201) -->
+          <g transform="translate(140, 50)">
+            <line x1="30" y1="50" x2="30" y2="130" stroke="#64748b" stroke-width="4"/>
+            <path d="M 10 20 L 50 60 M 50 20 L 10 60" stroke="#f8fafc" stroke-width="10" stroke-linecap="square"/>
+            <path d="M 10 20 L 20 30 M 40 50 L 50 60 M 50 20 L 40 30 M 20 50 L 10 60" stroke="#dc2626" stroke-width="10" stroke-linecap="square"/>
+          </g>
+          <!-- 3-striped beacon (240m) -->
+          <g transform="translate(260, 75)">
+            <rect x="0" y="0" width="22" height="75" fill="#f8fafc" stroke="#000" stroke-width="1.5"/>
+            <polygon points="0,15 22,5 22,18 0,28" fill="#dc2626"/>
+            <polygon points="0,35 22,25 22,38 0,48" fill="#dc2626"/>
+            <polygon points="0,55 22,45 22,58 0,68" fill="#dc2626"/>
+            <text x="11" y="90" font-size="8" fill="#94a3b8" text-anchor="middle">240 m</text>
+          </g>
+          <text x="200" y="25" font-size="11" font-weight="bold" fill="#cbd5e1" text-anchor="middle">Zeichen 201 (Andreaskreuz) & Entfernungsbake</text>
+        </svg>
+      `,
+
+      // 9. SPEZIAL ANHÄNGER: Abreißseil & Kupplung
+      anhaengerAbreissseil: `
+        <svg viewBox="0 0 400 240" width="380" height="228">
+          <rect width="400" height="240" fill="#0f172a"/>
+          <!-- Towbar & ball -->
+          <rect x="30" y="115" width="110" height="20" rx="3" fill="#64748b"/>
+          <circle cx="140" cy="115" r="14" fill="#94a3b8" stroke="#334155" stroke-width="2"/>
+          <!-- Trailer hitch tongue -->
+          <rect x="140" y="105" width="140" height="20" rx="4" fill="#475569"/>
+          <!-- Locking handle -->
+          <line x1="165" y1="105" x2="185" y2="80" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
+          <!-- Breakaway Cable (Rotes Abreißseil) connected to eyelet -->
+          <path d="M 210 125 C 210 165, 140 180, 110 145" stroke="#ef4444" stroke-width="4" fill="none"/>
+          <circle cx="110" cy="142" r="5" fill="#ef4444"/>
+          <!-- Label & arrow -->
+          <text x="110" y="175" font-size="9" font-weight="bold" fill="#ef4444" text-anchor="middle">Sicherungs-Öse am PKW</text>
+          <text x="250" y="155" font-size="9" fill="#94a3b8">Rotes Abreißseil (Notbremse)</text>
+          <text x="200" y="25" font-size="11" font-weight="bold" fill="#cbd5e1" text-anchor="middle">Abreißseil bei gebremstem Anhänger (§ 41 StVZO)</text>
+        </svg>
+      `,
+
+      // 10. SPEZIAL ANHÄNGER: Stützlast & Hebelwirkung
+      anhaengerStuetzlast: `
+        <svg viewBox="0 0 400 240" width="380" height="228">
+          <rect width="400" height="240" fill="#1e293b"/>
+          <line x1="20" y1="180" x2="380" y2="180" stroke="#475569" stroke-width="2"/>
+          <!-- Car outline (Left) -->
+          <rect x="40" y="110" width="120" height="50" rx="8" fill="#334155"/>
+          <circle cx="65" cy="170" r="14" fill="#000"/><circle cx="135" cy="170" r="14" fill="#000"/>
+          <!-- Trailer outline (Right, Single Axle) -->
+          <rect x="210" y="90" width="140" height="70" rx="4" fill="#1e40af"/>
+          <circle cx="280" cy="170" r="16" fill="#000"/>
+          <!-- Drawbar -->
+          <line x1="160" y1="145" x2="210" y2="145" stroke="#94a3b8" stroke-width="6"/>
+          <!-- Downward force arrow at hitch (Stützlast) -->
+          <path d="M 185 115 L 185 142" stroke="#22c55e" stroke-width="4" marker-end="url(#arrow)"/>
+          <polygon points="185,145 180,137 190,137" fill="#22c55e"/>
+          <text x="185" y="105" font-size="9" font-weight="bold" fill="#22c55e" text-anchor="middle">Stützlast</text>
+          <!-- Cargo load area -->
+          <rect x="250" y="105" width="55" height="30" fill="#f59e0b" rx="3"/>
+          <text x="277" y="123" font-size="8" font-weight="bold" fill="#000" text-anchor="middle">Ladung</text>
+          <text x="200" y="25" font-size="11" font-weight="bold" fill="#cbd5e1" text-anchor="middle">Richtige Lastverteilung & Stützlast beim Anhänger</text>
+        </svg>
+      `,
+
+      // 11. SPEZIAL ANHÄNGER: Schleppkurve beim Abbiegen
+      anhaengerSchleppkurve: `
+        <svg viewBox="0 0 400 240" width="380" height="228">
+          <rect width="400" height="240" fill="#1e293b"/>
+          <!-- Curb corner (top-down) -->
+          <path d="M 0 0 L 140 0 L 140 100 Q 140 140 180 140 L 400 140 L 400 240 L 0 240 Z" fill="#334155"/>
+          <!-- Sidewalk (Gehweg) -->
+          <rect x="0" y="0" width="135" height="95" fill="#475569"/>
+          <!-- Car turning right -->
+          <g transform="translate(180, 50) rotate(35)">
+            <rect x="0" y="0" width="24" height="42" rx="4" fill="#10b981"/>
+          </g>
+          <!-- Trailer cutting the corner inside (Schleppkurve) -->
+          <g transform="translate(145, 95) rotate(15)">
+            <rect x="0" y="0" width="22" height="40" rx="3" fill="#3b82f6"/>
+          </g>
+          <!-- Trajectory curve showing danger zone on curb -->
+          <path d="M 155 135 Q 140 120 140 90" stroke="#ef4444" stroke-width="3" stroke-dasharray="4 3" fill="none"/>
+          <text x="135" y="130" font-size="8" font-weight="bold" fill="#ef4444">Gefahr: Schneidet Kurve!</text>
+          <text x="200" y="25" font-size="11" font-weight="bold" fill="#cbd5e1" text-anchor="middle">Schleppkurve: Anhänger läuft in engem Radius nach</text>
+        </svg>
+      `,
+
+      // 12. SPEZIAL ANHÄNGER: Gespanngewichte (Klasse B 3.500 kg Regel)
+      anhaengerGewichte: `
+        <svg viewBox="0 0 400 240" width="380" height="228">
+          <rect width="400" height="240" fill="#0f172a"/>
+          <!-- Combination 1 (Permitted with B) -->
+          <g transform="translate(20, 45)">
+            <rect x="0" y="0" width="110" height="32" rx="4" fill="#334155"/>
+            <text x="55" y="20" font-size="8.5" font-weight="bold" fill="#fff" text-anchor="middle">PKW: zGM 2.200 kg</text>
+            <text x="120" y="21" font-size="14" fill="#94a3b8">+</text>
+            <rect x="135" y="0" width="110" height="32" rx="4" fill="#1e40af"/>
+            <text x="190" y="20" font-size="8.5" font-weight="bold" fill="#fff" text-anchor="middle">Anh.: zGM 1.200 kg</text>
+            <text x="255" y="21" font-size="14" fill="#94a3b8">=</text>
+            <rect x="275" y="0" width="85" height="32" rx="4" fill="#065f46"/>
+            <text x="317" y="15" font-size="8" font-weight="bold" fill="#34d399" text-anchor="middle">3.400 kg</text>
+            <text x="317" y="26" font-size="7.5" font-weight="bold" fill="#34d399" text-anchor="middle">✓ KLASSE B</text>
+          </g>
+          <!-- Combination 2 (Exceeds 3500kg -> Requires B96 or BE) -->
+          <g transform="translate(20, 115)">
+            <rect x="0" y="0" width="110" height="32" rx="4" fill="#334155"/>
+            <text x="55" y="20" font-size="8.5" font-weight="bold" fill="#fff" text-anchor="middle">PKW: zGM 2.300 kg</text>
+            <text x="120" y="21" font-size="14" fill="#94a3b8">+</text>
+            <rect x="135" y="0" width="110" height="32" rx="4" fill="#1e40af"/>
+            <text x="190" y="20" font-size="8.5" font-weight="bold" fill="#fff" text-anchor="middle">Anh.: zGM 1.500 kg</text>
+            <text x="255" y="21" font-size="14" fill="#94a3b8">=</text>
+            <rect x="275" y="0" width="85" height="32" rx="4" fill="#7f1d1d"/>
+            <text x="317" y="15" font-size="8" font-weight="bold" fill="#f87171" text-anchor="middle">3.800 kg</text>
+            <text x="317" y="26" font-size="7.5" font-weight="bold" fill="#f87171" text-anchor="middle">✗ B96 / BE</text>
+          </g>
+          <!-- Rule reminder text -->
+          <rect x="20" y="175" width="360" height="42" rx="4" fill="rgba(255,255,255,0.05)"/>
+          <text x="200" y="193" font-size="8.5" fill="#cbd5e1" text-anchor="middle">Regel: Mit Klasse B dürfen Gespanne über 750 kg gefahren werden,</text>
+          <text x="200" y="207" font-size="8.5" font-weight="bold" fill="#fbbf24" text-anchor="middle">solange die zulässige Gesamtmasse (zGM) beider max. 3.500 kg beträgt!</text>
+          <text x="200" y="25" font-size="11" font-weight="bold" fill="#cbd5e1" text-anchor="middle">Fahrerlaubnis Klasse B: Gespanngewichte im Überblick</text>
+        </svg>
+      `,
+
+      // 13. SPEZIAL ANHÄNGER: Außenspiegel bei breitem Anhänger
+      anhaengerSpiegel: `
+        <svg viewBox="0 0 400 240" width="380" height="228">
+          <rect width="400" height="240" fill="#0f172a"/>
+          <!-- Car roof view -->
+          <rect x="165" y="130" width="70" height="90" rx="8" fill="#334155"/>
+          <rect x="175" y="145" width="50" height="35" rx="3" fill="#1e293b"/>
+          <!-- Caravan trailer (much wider than car) -->
+          <rect x="130" y="20" width="140" height="95" rx="4" fill="#1e40af"/>
+          <text x="200" y="65" font-size="9" font-weight="bold" fill="#fff" text-anchor="middle">Breiter Wohnwagen</text>
+          <!-- Extended side mirrors with extension arms -->
+          <line x1="165" y1="150" x2="115" y2="150" stroke="#f59e0b" stroke-width="3"/>
+          <rect x="110" y="142" width="8" height="16" rx="2" fill="#fbbf24"/>
+          <line x1="235" y1="150" x2="285" y2="150" stroke="#f59e0b" stroke-width="3"/>
+          <rect x="282" y="142" width="8" height="16" rx="2" fill="#fbbf24"/>
+          <!-- Sightlines from extended mirrors past caravan -->
+          <line x1="110" y1="150" x2="110" y2="10" stroke="#22c55e" stroke-width="2" stroke-dasharray="4 3"/>
+          <line x1="290" y1="150" x2="290" y2="10" stroke="#22c55e" stroke-width="2" stroke-dasharray="4 3"/>
+          <text x="200" y="232" font-size="8.5" fill="#94a3b8" text-anchor="middle">Zusätzliche Außenspiegel ermöglichen freie Sicht nach hinten</text>
+        </svg>
+      `
+    };
+
+    // ==========================================
+    // OFFIZIELLER FRAGENKATALOG (KLASSE B & ANHÄNGER)
+    // ==========================================
+    const allQuestions = [
+      {
+        id: 1,
+        category: "Vorfahrt",
+        points: 5,
+        imageSvg: svgImages.rechtsVorLinks,
+        imageCaption: "Prüfungsbild: Unbeschilderte Kreuzung. Sie (grün) möchten geradeaus fahren.",
+        text: "Sie nähern sich der abgebildeten Kreuzung, an der keine vorfahrtregelnden Schilder stehen. Wer hat Vorfahrt?",
+        answers: [
+          { text: "Das gelbe Fahrzeug von rechts hat Vorfahrt vor mir (Rechts vor Links)", correct: true },
+          { text: "Ich habe Vorfahrt vor dem roten Fahrzeug von links", correct: true },
+          { text: "Das rote Fahrzeug hat Vorfahrt vor allen anderen, weil es links abbiegen will", correct: false }
+        ],
+        explanation: "Nach § 8 Abs. 1 StVO gilt an Kreuzungen ohne Schilder ausnahmslos 'Rechts vor Links'. Das gelbe Auto kommt von rechts und hat Vorfahrt. Sie selbst haben Vorfahrt vor dem roten Fahrzeug von links."
+      },
+      {
+        id: 2,
+        category: "Vorfahrt",
+        points: 5,
+        imageSvg: svgImages.abknickendeVorfahrt,
+        imageCaption: "Prüfungsbild: Abknickende Vorfahrtstraße (Zeichen 306 mit Zusatzzeichen).",
+        text: "Sie folgen der abknickenden Vorfahrtstraße nach links. Wie verhalten Sie sich gegenüber dem gelben PKW?",
+        answers: [
+          { text: "Ich muss das Abbiegen nach links rechtzeitig und deutlich ankündigen (blinken)", correct: true },
+          { text: "Ich habe Vorfahrt vor dem gelben PKW, da dieser aus der untergeordneten Straße kommt", correct: true },
+          { text: "Ich muss dem gelben PKW die Vorfahrt gewähren, da er von rechts kommt", correct: false }
+        ],
+        explanation: "Wer dem Verlauf einer abknickenden Vorfahrtstraße folgt, hat Vorrang vor Fahrzeugen auf untergeordneten Straßen. Das Abbiegen muss zwingend durch Blinken angezeigt werden (§ 9 StVO)."
+      },
+      {
+        id: 3,
+        category: "Verhalten",
+        points: 4,
+        imageSvg: svgImages.abstandRad,
+        imageCaption: "Prüfungsbild: Blick aus der Windschutzscheibe auf einen Radfahrer innerorts.",
+        text: "Sie möchten den abgebildeten Radfahrer innerorts überholen. Was müssen Sie beachten?",
+        answers: [
+          { text: "Ich muss beim Überholen einen Mindestabstand von 1,5 Metern zu dem Radfahrer einhalten", correct: true },
+          { text: "Wenn Gegenverkehr herannaht und 1,5 m Abstand nicht möglich sind, muss ich hinter dem Radfahrer warten", correct: true },
+          { text: "Innerorts darf mit 0,5 Metern Abstand überholt werden, wenn ich langsam fahre", correct: false }
+        ],
+        explanation: "Nach § 5 Abs. 4 StVO gilt beim Überholen von Radfahrern und Fußgängern ein gesetzlicher Mindestabstand von 1,5 m innerorts und 2,0 m außerorts. Wenn dies wegen Gegenverkehrs nicht geht: Dahinterbleiben!"
+      },
+      {
+        id: 4,
+        category: "Verhalten",
+        points: 5,
+        imageSvg: svgImages.busHaltestelle,
+        imageCaption: "Prüfungsbild: Linienbus steht mit eingeschaltetem Warnblinklicht an Haltestelle.",
+        text: "Ein Linienbus hält mit eingeschaltetem Warnblinklicht an einer Haltestelle. Wie verhalten Sie sich?",
+        answers: [
+          { text: "Ich darf nur mit Schrittgeschwindigkeit (ca. 4–7 km/h) und mit ausreichendem Abstand vorbeifahren", correct: true },
+          { text: "Fahrgäste dürfen keinesfalls gefährdet oder behindert werden; wenn nötig, muss gewartet werden", correct: true },
+          { text: "Auch der Gegenverkehr darf nur mit Schrittgeschwindigkeit an dem Bus vorbeifahren", correct: true }
+        ],
+        explanation: "Sobald der Bus mit Warnblinklicht an der Haltestelle steht, darf in beiden Fahrtrichtungen nur mit Schrittgeschwindigkeit (4–7 km/h) und sicherem Abstand vorbeigefahren werden (§ 20 StVO)."
+      },
+      {
+        id: 5,
+        category: "Verhalten",
+        points: 4,
+        imageSvg: svgImages.rettungsgasse,
+        imageCaption: "Prüfungsbild: Stau auf einer 3-streifigen Autobahn.",
+        text: "Auf einer Autobahn mit drei Fahrstreifen für eine Richtung beginnt der Verkehr zu stocken. Wo muss die Rettungsgasse gebildet werden?",
+        answers: [
+          { text: "Immer zwischen dem ganz linken und dem unmittelbar rechts daneben liegenden Fahrstreifen", correct: true },
+          { text: "Auf dem Standstreifen (Seitenstreifen)", correct: false },
+          { text: "Die Rettungsgasse muss bereits bei Schrittgeschwindigkeit freigehalten werden, nicht erst bei Sirenen", correct: true }
+        ],
+        explanation: "Nach § 11 Abs. 2 StVO ist die Rettungsgasse immer zwischen der äußersten linken und den mittleren/rechten Spuren zu bilden, sobald der Verkehr stockt."
+      },
+      {
+        id: 6,
+        category: "Vorfahrt",
+        points: 3,
+        imageSvg: svgImages.kreisverkehr,
+        imageCaption: "Prüfungsbild: Zufahrt auf einen Kreisverkehr (Zeichen 215 + 205).",
+        text: "Sie möchten in den abgebildeten Kreisverkehr einfahren. Welche Verhaltensregeln gelten?",
+        answers: [
+          { text: "Fahrzeuge auf der Kreisfahrbahn haben Vorfahrt vor dem Einfahrenden", correct: true },
+          { text: "Beim Einfahren in den Kreisverkehr darf NICHT geblinkt werden", correct: true },
+          { text: "Beim Ausfahren aus dem Kreisverkehr MUSS geblinkt werden", correct: true }
+        ],
+        explanation: "Das Schild 215 i.V.m. 205 regelt: Kreisfahrzeuge haben Vorfahrt. Bei der Einfahrt ist Blinken verboten (§ 8 Abs. 1a StVO), bei der Ausfahrt Pflicht."
+      },
+      {
+        id: 7,
+        category: "Vorfahrt",
+        points: 4,
+        imageSvg: svgImages.gruenpfeil,
+        imageCaption: "Prüfungsbild: Rote Ampel mit Blechschild 'Grüner Pfeil' (Zeichen 720).",
+        text: "Vor Ihnen zeigt die Ampel Rot. Rechts daneben ist das Schild 'Grüner Pfeil' angebracht. Wie verhalten Sie sich?",
+        answers: [
+          { text: "Ich muss zunächst an der Haltlinie anhalten (wie bei einem Stoppschild)", correct: true },
+          { text: "Nach dem Anhalten darf ich vorsichtig rechts abbiegen, wenn Querverkehr und Fußgänger frei sind", correct: true },
+          { text: "Ich bin verpflichtet abzubiegen, wenn nachfolgende Fahrzeuge hupen", correct: false }
+        ],
+        explanation: "Der Grünpfeil (Zeichen 720) erlaubt das Rechtsabbiegen nach vollständigem Stopp an der Haltlinie, begründet aber keine Abbiegepflicht."
+      },
+      {
+        id: 8,
+        category: "Verhalten",
+        points: 4,
+        imageSvg: svgImages.bahnuebergang,
+        imageCaption: "Prüfungsbild: Andreaskreuz (Zeichen 201) und Entfernungsbake vor Bahnübergang.",
+        text: "Was bedeutet das Andreaskreuz (Zeichen 201) an einem Bahnübergang?",
+        answers: [
+          { text: "Schienenfahrzeuge haben Vorrang vor dem Straßenverkehr", correct: true },
+          { text: "Ab der ersten Bake (3 Streifen) gilt Überholverbot für Kraftfahrzeuge", correct: true },
+          { text: "Auf Bahnübergängen darf keinesfalls angehalten oder geparkt werden", correct: true }
+        ],
+        explanation: "Am Andreaskreuz haben Schienenfahrzeuge immer Vorrang (§ 19 StVO). Überholen ist vor und auf Bahnübergängen verboten."
+      },
+
+      // ANHÄNGER-SPEZIALFRAGEN (KLASSE B & ANHÄNGER)
+      {
+        id: 9,
+        category: "Anhänger",
+        points: 5,
+        imageSvg: svgImages.anhaengerGewichte,
+        imageCaption: "Prüfungsbild: Zulässige Gewichte bei Fahrzeugkombinationen mit Klasse B.",
+        text: "Welche Anhänger dürfen Sie mit einer normalen Fahrerlaubnis der Klasse B führen?",
+        answers: [
+          { text: "Anhänger mit einer zulässigen Gesamtmasse (zGM) von maximal 750 kg immer", correct: true },
+          { text: "Anhänger über 750 kg zGM, sofern die zGM der Fahrzeugkombination maximal 3.500 kg beträgt", correct: true },
+          { text: "Jeden Anhänger, solange das Zugfahrzeug schwerer ist als der Anhänger", correct: false }
+        ],
+        explanation: "Klasse B Grundregel: 1. Anhänger bis 750 kg zGM dürfen immer mitgeführt werden (Gespann max. 4.250 kg). 2. Anhänger über 750 kg zGM dürfen mitgeführt werden, wenn die zulässige Gesamtmasse (zGM) von Zugfahrzeug und Anhänger zusammen maximal 3.500 kg beträgt!"
+      },
+      {
+        id: 10,
+        category: "Anhänger",
+        points: 4,
+        imageSvg: svgImages.anhaengerAbreissseil,
+        imageCaption: "Prüfungsbild: Kugelkupplung mit rotem Abreißseil am Zugfahrzeug.",
+        text: "Wie muss das Abreißseil eines gebremsten Anhängers ordnungsgemäß am Zugfahrzeug befestigt werden?",
+        answers: [
+          { text: "Das Abreißseil muss in eine dafür vorgesehene Öse, Halterung oder Schelle am Zugfahrzeug eingehängt werden", correct: true },
+          { text: "Es dient dazu, bei einem Abreißen des Anhängers dessen Notbremse sofort mechanisch auszulösen", correct: true },
+          { text: "Es reicht aus, das Seil einfach lose über den Kugelhals der Anhängerkupplung zu legen (in vielen Ländern wie NL/CH verboten)", correct: false }
+        ],
+        explanation: "Das Abreißseil muss an einer festen Öse am Fahrzeug angebracht werden, damit es bei Trennung des Anhängers die Handbremse des Anhängers zudrückt. Ein loses Überwerfen über den Kugelkopf kann bei Abriss abrutschen und ist fehlerhaft."
+      },
+      {
+        id: 11,
+        category: "Anhänger",
+        points: 5,
+        imageSvg: svgImages.anhaengerStuetzlast,
+        imageCaption: "Prüfungsbild: Stützlast und Lastverteilung auf Deichsel und Achse.",
+        text: "Was kann passieren, wenn ein Anhänger hecklastig beladen wird, sodass die Stützlast negativ wird?",
+        answers: [
+          { text: "Die Hinterachse des Zugfahrzeugs wird entlastet, was die Fahrstabilität drastisch verringert", correct: true },
+          { text: "Das Gespann kann bereits bei geringen Geschwindigkeiten unkontrollierbar ins Schlingern geraten", correct: true },
+          { text: "Die Kupplung kann bei Bodenwellen nach oben vom Kugelkopf abreißen", correct: true }
+        ],
+        explanation: "Eine negative Stützlast hebelt das Heck des Zugfahrzeugs an. Dies führt zu fatalem Schlingern, Entlastung der Brems- und Lenkachsen und Abreißgefahr der Kupplung."
+      },
+      {
+        id: 12,
+        category: "Anhänger",
+        points: 4,
+        imageSvg: svgImages.anhaengerSchleppkurve,
+        imageCaption: "Prüfungsbild: Kurvenfahrt mit Anhänger (Schleppkurve).",
+        text: "Sie biegen mit einem PKW-Anhänger-Gespann eng nach rechts ab. Welches Fahrverhalten müssen Sie berücksichtigen?",
+        answers: [
+          { text: "Der Anhänger läuft in einem engeren Kurvenradius nach als das Zugfahrzeug (Schleppkurve)", correct: true },
+          { text: "Es besteht die Gefahr, dass die Räder des Anhängers über den Gehweg rollen und Passanten gefährden", correct: true },
+          { text: "Ich muss vor dem Abbiegen etwas weiter ausholen und den Kurvenradius größer wählen", correct: true }
+        ],
+        explanation: "Durch den Radstand schneidet die Anhängerachse die Kurve nach innen. Man muss weiter ausholen, um nicht über Bordsteine oder Fußgänger zu fahren."
+      },
+      {
+        id: 13,
+        category: "Anhänger",
+        points: 4,
+        imageSvg: svgImages.anhaengerSpiegel,
+        imageCaption: "Prüfungsbild: Breiter Wohnwagen hinter Zugfahrzeug.",
+        text: "Der von Ihnen gezogene Wohnanhänger ist breiter als das Zugfahrzeug. Was ist gesetzlich vorgeschrieben?",
+        answers: [
+          { text: "Es müssen zusätzliche Außenrückspiegel mit verlängerten Auslegern angebracht werden", correct: true },
+          { text: "Die Spiegel müssen eine ungehinderte Sicht an den Seiten des Anhängers vorbei nach hinten ermöglichen", correct: true },
+          { text: "Der normale Innenspiegel reicht aus, solange die Heckscheibe des Wohnwagens durchsichtig ist", correct: false }
+        ],
+        explanation: "Nach § 56 StVZO müssen bei breiten Anhängern Zusatzaußenspiegel montiert werden, da der tote Winkel sonst die gesamte Fahrbahn hinter dem Gespann verdeckt."
+      },
+
+      // FORMELN & RECHENFRAGEN
+      {
+        id: 14,
+        category: "Formeln",
+        points: 3,
+        type: "number",
+        unit: "Meter",
+        text: "Sie fahren mit einer Geschwindigkeit von 100 km/h. Wie lang ist der Reaktionsweg nach der Faustformel?",
+        correctValue: 30,
+        tolerance: 0,
+        explanation: "Faustformel für Reaktionsweg: (Geschwindigkeit ÷ 10) × 3 = (100 ÷ 10) × 3 = 10 × 3 = 30 Meter."
+      },
+      {
+        id: 15,
+        category: "Formeln",
+        points: 4,
+        type: "number",
+        unit: "Meter",
+        text: "Sie fahren 100 km/h und führen eine normale Betriebsbremsung durch. Wie lang ist der Bremsweg nach der Faustformel?",
+        correctValue: 100,
+        tolerance: 0,
+        explanation: "Faustformel für normalen Bremsweg: (v ÷ 10) × (v ÷ 10) = (100 ÷ 10) × (100 ÷ 10) = 10 × 10 = 100 Meter."
+      },
+      {
+        id: 16,
+        category: "Formeln",
+        points: 4,
+        type: "number",
+        unit: "Meter",
+        text: "Sie fahren 100 km/h und müssen eine Gefahrenbremsung (Vollbremsung) durchführen. Wie lang ist der Bremsweg?",
+        correctValue: 50,
+        tolerance: 0,
+        explanation: "Faustformel für Gefahrenbremsung: Normaler Bremsweg halbiert. (100 ÷ 10) × (100 ÷ 10) ÷ 2 = 100 ÷ 2 = 50 Meter."
+      },
+      {
+        id: 17,
+        category: "Formeln",
+        points: 4,
+        type: "number",
+        unit: "Meter",
+        text: "Sie fahren mit 50 km/h innerhalb geschlossener Ortschaften. Wie lang ist der Anhalteweg bei einer normalen Bremsung?",
+        correctValue: 40,
+        tolerance: 0,
+        explanation: "Anhalteweg = Reaktionsweg + Bremsweg. Reaktionsweg: (50 ÷ 10) × 3 = 15 m. Bremsweg: (50 ÷ 10) × (50 ÷ 10) = 25 m. Gesamt: 15 m + 25 m = 40 Meter."
+      },
+      {
+        id: 18,
+        category: "Formeln",
+        points: 3,
+        type: "number",
+        unit: "Meter",
+        text: "Sie fahren auf der Landstraße mit 100 km/h. Welcher Sicherheitsabstand zum vorausfahrenden Fahrzeug muss mindestens eingehalten werden?",
+        correctValue: 50,
+        tolerance: 0,
+        explanation: "Faustregel für den Mindestabstand außerorts: 'Halber Tacho' in Metern. Bei 100 km/h = 50 Meter (entspricht dem Abstand von 2 Leitpfosten am Fahrbahnrand)."
+      },
+
+      // VERKEHRSRECHT & CANG & ALKOHOL
+      {
+        id: 19,
+        category: "Verkehrsrecht",
+        points: 5,
+        text: "Welcher gesetzliche Grenzwert gilt seit der Reform (CanG / StVG) für Cannabis (THC) am Steuer?",
+        answers: [
+          { text: "Ein Grenzwert von 3,5 ng/ml THC im Blutserum", correct: true },
+          { text: "Für Fahranfänger in der Probezeit und Personen unter 21 Jahren gilt ein absolutes Cannabisverbot (0,0 ng/ml)", correct: true },
+          { text: "Man darf nach Cannabiskonsum unbegrenzt fahren, solange man sich fit fühlt", correct: false }
+        ],
+        explanation: "Seit 2024 gilt nach § 24a Abs. 1a StVG der gesetzliche THC-Grenzwert von 3,5 ng/ml. Für Fahranfänger und Fahrer unter 21 Jahren gilt die Null-Toleranz-Grenze (0,0 ng/ml)."
+      },
+      {
+        id: 20,
+        category: "Verkehrsrecht",
+        points: 5,
+        text: "Was gilt bezüglich des gleichzeitigen Konsums von Cannabis und Alkohol am Steuer (Mischkonsum)?",
+        answers: [
+          { text: "Es gilt ein striktes und absolutes Alkoholverbot bei gleichzeitigem Cannabiskonsum am Steuer", correct: true },
+          { text: "Die Kombination beider Substanzen führt zu unberechenbaren Wechselwirkungen und Fahruntüchtigkeit", correct: true },
+          { text: "Wer Cannabis konsumiert hat, darf bis zu 0,5 Promille Alkohol trinken", correct: false }
+        ],
+        explanation: "Gemäß § 24a Abs. 2a StVG ist Mischkonsum strengstens verboten: Wer Cannabis konsumiert hat, darf im Straßenverkehr keinen Tropfen Alkohol trinken (0,0 Promille-Regel)."
+      },
+      {
+        id: 21,
+        category: "Verkehrsrecht",
+        points: 4,
+        text: "Ab welcher Blutalkoholkonzentration (Promille) handelt ein Kraftfahrer immer absolut fahruntüchtig (Straftat § 316 StGB)?",
+        answers: [
+          { text: "Ab 1,1 Promille Blutalkoholkonzentration", correct: true },
+          { text: "Bereits ab 0,3 Promille bei Ausfallerscheinungen oder einem Verkehrsunfall", correct: true },
+          { text: "Erst ab 1,6 Promille", correct: false }
+        ],
+        explanation: "Ab 1,1 Promille gilt die absolute Fahruntüchtigkeit (Straftat!). Ab 0,3 Promille liegt bei Fahrfehlern oder Unfällen bereits eine relative Fahruntüchtigkeit vor."
+      },
+      {
+        id: 22,
+        category: "Verkehrsrecht",
+        points: 3,
+        text: "Wie weit müssen Sie beim Parken mindestens von Schnittpunkten der Fahrbahnkanten an Kreuzungen entfernt bleiben?",
+        answers: [
+          { text: "Mindestens 5 Meter vor und hinter Kreuzungen", correct: true },
+          { text: "Mindestens 8 Meter, wenn rechts neben der Fahrbahn ein baulich angelegter Radweg verläuft", correct: true },
+          { text: "Mindestens 2 Meter reichen aus", correct: false }
+        ],
+        explanation: "Nach § 12 Abs. 3 StVO ist das Parken bis zu je 5 m von Schnittpunkten der Fahrbahnkanten unzulässig; bei Radwegen neben der Fahrbahn sind es 8 m."
+      },
+      {
+        id: 23,
+        category: "Verkehrsrecht",
+        points: 3,
+        text: "Welche Richtgeschwindigkeit gilt auf deutschen Autobahnen für PKW ohne Anhänger, sofern keine Begrenzungsschilder aufgestellt sind?",
+        answers: [
+          { text: "130 km/h", correct: true },
+          { text: "120 km/h", correct: false },
+          { text: "100 km/h", correct: false }
+        ],
+        explanation: "Auf deutschen Autobahnen gilt ohne Beschilderung die Richtgeschwindigkeit von 130 km/h (keine starre Höchstgrenze, aber empfohlene Richtmarke)."
+      },
+
+      // TECHNIK & UMWELT
+      {
+        id: 24,
+        category: "Technik",
+        points: 3,
+        text: "Welche gesetzliche Mindestprofiltiefe müssen die Reifen eines PKW am gesamten Umfang aufweisen?",
+        answers: [
+          { text: "Mindestens 1,6 mm", correct: true },
+          { text: "Mindestens 3,0 mm", correct: false },
+          { text: "Mindestens 0,8 mm", correct: false }
+        ],
+        explanation: "Gesetzlich vorgeschrieben sind mindestens 1,6 mm (§ 36 StVZO). Aus Sicherheitsgründen werden jedoch 3–4 mm empfohlen."
+      },
+      {
+        id: 25,
+        category: "Technik",
+        points: 3,
+        text: "Wann darf die Nebelschlussleuchte an Ihrem Kraftfahrzeug eingeschaltet werden?",
+        answers: [
+          { text: "Nur bei Nebel und einer Sichtweite von weniger als 50 Metern", correct: true },
+          { text: "Bei starkem Schneefall und Regen zur besseren Sichtbarkeit", correct: false },
+          { text: "Innerorts immer, sobald es neblig ist", correct: false }
+        ],
+        explanation: "Die Nebelschlussleuchte darf ausschließlich bei Nebel unter 50 m Sicht genutzt werden. Dann gilt zugleich eine Höchstgeschwindigkeit von max. 50 km/h!"
+      },
+      {
+        id: 26,
+        category: "Technik",
+        points: 3,
+        text: "Welchen entscheidenden Vorteil bietet das Antiblockiersystem (ABS) bei einer Vollbremsung?",
+        answers: [
+          { text: "Das Fahrzeug bleibt auch bei einer Vollbremsung lenkfähig", correct: true },
+          { text: "Der Bremsweg wird auf allen Fahrbahnbelägen garantiert halbiert", correct: false },
+          { text: "Ein Ausbrechen des Fahrzeugs durch blockierende Räder wird verhindert", correct: true }
+        ],
+        explanation: "ABS verhindert das Blockieren der Räder. Größter Vorteil: Das Fahrzeug bleibt während der Vollbremsung steuer- und ausweichfähig."
+      },
+      {
+        id: 27,
+        category: "Technik",
+        points: 3,
+        text: "Was bewirkt das elektronische Stabilitätsprogramm (ESP) in einem Kraftfahrzeug?",
+        answers: [
+          { text: "Es verhindert durch gezielten Bremseingriff an einzelnen Rädern ein Schleudern des Fahrzeugs", correct: true },
+          { text: "Es verhindert das Durchdrehen der Räder beim Anfahren", correct: true },
+          { text: "Es setzt die physikalischen Grenzen der Kurvengeschwindigkeit außer Kraft", correct: false }
+        ],
+        explanation: "ESP stabilisiert das Fahrzeug in kritischen Situationen durch gezieltes Abbremsen einzelner Räder, kann die Physik aber nicht aufheben."
+      },
+      {
+        id: 28,
+        category: "Technik",
+        points: 2,
+        text: "Wann und wie sollte der Reifendruck am Kraftfahrzeug kontrolliert werden?",
+        answers: [
+          { text: "Regelmäßig bei kalten Reifen", correct: true },
+          { text: "Vor längeren Urlaubsfahrten mit höherer Beladung muss der Reifendruck entsprechend erhöht werden", correct: true },
+          { text: "Nur bei heißen Reifen direkt nach schneller Autobahnfahrt", correct: false }
+        ],
+        explanation: "Der Reifendruck wird immer bei kalten Reifen gemessen, da sich erwärmte Luft ausdehnt und den Messwert verfälscht."
+      },
+      {
+        id: 29,
+        category: "Technik",
+        points: 2,
+        text: "Wie können Sie durch Ihre Fahrweise Kraftstoff sparen und die Umwelt schonen?",
+        answers: [
+          { text: "Vorausschauend fahren, um unnötiges Beschleunigen und Abbremsen zu vermeiden", correct: true },
+          { text: "Rechtzeitig hochschalten und im höchstmöglichen Gang mit niedriger Drehzahl fahren", correct: true },
+          { text: "Unnötigen Ballast und Dachträger bei Nichtgebrauch abmontieren", correct: true }
+        ],
+        explanation: "Vorausschauendes Fahren, frühes Hochschalten (niedrige Drehzahlen) und das Entfernen von Dachaufbauten senken den Verbrauch erheblich."
+      },
+      {
+        id: 30,
+        category: "Verhalten",
+        points: 4,
+        text: "Wodurch kann die Gefahr von Aquaplaning (Wasserglätte) drastisch steigen?",
+        answers: [
+          { text: "Durch zu hohe Fahrgeschwindigkeit bei starkem Regen", correct: true },
+          { text: "Durch zu geringe Profiltiefe der Reifen", correct: true },
+          { text: "Durch Spurrillen in der Fahrbahn, in denen sich Wasser sammelt", correct: true }
+        ],
+        explanation: "Aquaplaning entsteht, wenn das Reifenprofil das Wasser nicht mehr verdrängen kann. Hauptursachen: Hohe Geschwindigkeit, abgefahrene Reifen, Spurrillen."
+      }
+    ];
+
+    // STATE
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let userAnswers = {};
+    let mistakes = JSON.parse(localStorage.getItem('fahrschule_mistakes') || '[]');
+
+    document.getElementById('mistakeCount').textContent = mistakes.length;
+
+    function initExam() {
+      // 30 questions randomized
+      currentQuestions = [...allQuestions].sort(() => 0.5 - Math.random()).slice(0, 30);
+      userAnswers = {};
+      currentIndex = 0;
+      document.getElementById('modeLabel').textContent = "TÜV-Prüfungssimulation (30 Fragen)";
+      document.getElementById('totalQuestionsNum').textContent = currentQuestions.length;
+      document.getElementById('evalCard').style.display = "none";
+      document.getElementById('questionCard').style.display = "block";
+      renderNav();
+      renderQuestion();
+      updateErrorPointsBadge();
+    }
+
+    function renderNav() {
+      const nav = document.getElementById('questionNav');
+      nav.innerHTML = '';
+      currentQuestions.forEach((q, idx) => {
+        const dot = document.createElement('div');
+        dot.className = `nav-dot ${idx === currentIndex ? 'current' : ''}`;
+        if (userAnswers[q.id] !== undefined) {
+          dot.classList.add('answered');
+        }
+        dot.textContent = idx + 1;
+        dot.onclick = () => {
+          currentIndex = idx;
+          renderNav();
+          renderQuestion();
+        };
+        nav.appendChild(dot);
+      });
+    }
+
+    function renderQuestion() {
+      const q = currentQuestions[currentIndex];
+      document.getElementById('currentQuestionNum').textContent = currentIndex + 1;
+      document.getElementById('qCategory').textContent = q.category;
+      document.getElementById('qPoints').textContent = `${q.points} Fehlerpunkte`;
+      document.getElementById('qText').textContent = q.text;
+
+      // SCENARIO IMAGE (SVG)
+      const scBox = document.getElementById('scenarioContainer');
+      const scSvg = document.getElementById('scenarioSvg');
+      const scCap = document.getElementById('scenarioCaption');
+
+      if (q.imageSvg) {
+        scBox.style.display = 'flex';
+        scSvg.innerHTML = q.imageSvg;
+        scCap.textContent = q.imageCaption || "Amtliches Prüfungsbild (Situation beachten)";
+      } else {
+        scBox.style.display = 'none';
+        scSvg.innerHTML = '';
+      }
+
+      // EXPLANATION
+      const exp = document.getElementById('explanationBox');
+      exp.style.display = 'none';
+      exp.innerHTML = `<strong>TÜV-Prüfer-Erklärung:</strong> ${q.explanation}`;
+
+      const answersContainer = document.getElementById('answersContainer');
+      const numberContainer = document.getElementById('numberInputContainer');
+
+      answersContainer.innerHTML = '';
+
+      if (q.type === 'number') {
+        answersContainer.style.display = 'none';
+        numberContainer.style.display = 'flex';
+        document.getElementById('numUnit').textContent = q.unit || 'Meter';
+        const input = document.getElementById('numInput');
+        input.value = userAnswers[q.id] !== undefined ? userAnswers[q.id] : '';
+        input.oninput = (e) => {
+          userAnswers[q.id] = parseFloat(e.target.value);
+          renderNav();
+          updateErrorPointsBadge();
+        };
+      } else {
+        answersContainer.style.display = 'flex';
+        numberContainer.style.display = 'none';
+
+        const currentSelected = userAnswers[q.id] || [];
+
+        q.answers.forEach((ans, aIdx) => {
+          const item = document.createElement('div');
+          const isSelected = currentSelected.includes(aIdx);
+          item.className = `answer-item ${isSelected ? 'selected' : ''}`;
+          item.innerHTML = `
+            <div class="custom-check">${isSelected ? '✓' : ''}</div>
+            <div class="answer-label">${ans.text}</div>
+          `;
+          item.onclick = () => {
+            toggleAnswer(q.id, aIdx);
+          };
+          answersContainer.appendChild(item);
+        });
+      }
+
+      document.getElementById('btnPrev').disabled = (currentIndex === 0);
+      document.getElementById('btnNext').disabled = (currentIndex === currentQuestions.length - 1);
+    }
+
+    function toggleAnswer(qId, answerIndex) {
+      if (!userAnswers[qId]) {
+        userAnswers[qId] = [];
+      }
+      const arr = userAnswers[qId];
+      const pos = arr.indexOf(answerIndex);
+      if (pos > -1) {
+        arr.splice(pos, 1);
+      } else {
+        arr.push(answerIndex);
+      }
+      renderNav();
+      renderQuestion();
+      updateErrorPointsBadge();
+    }
+
+    function navigateQuestion(delta) {
+      const nextIdx = currentIndex + delta;
+      if (nextIdx >= 0 && nextIdx < currentQuestions.length) {
+        currentIndex = nextIdx;
+        renderNav();
+        renderQuestion();
+      }
+    }
+
+    function checkCurrentAnswer() {
+      const q = currentQuestions[currentIndex];
+      const exp = document.getElementById('explanationBox');
+      exp.style.display = 'block';
+
+      if (q.type === 'number') {
+        const val = userAnswers[q.id];
+        const isRight = (val === q.correctValue);
+        const input = document.getElementById('numInput');
+        input.style.borderColor = isRight ? "var(--success)" : "var(--danger)";
+      } else {
+        const items = document.querySelectorAll('.answer-item');
+        q.answers.forEach((ans, idx) => {
+          if (ans.correct) {
+            items[idx].classList.add('correct');
+          } else if (userAnswers[q.id] && userAnswers[q.id].includes(idx)) {
+            items[idx].classList.add('wrong');
+          }
+        });
+      }
+    }
+
+    function calculateMistakes() {
+      let totalFP = 0;
+      let fivePointMistakes = 0;
+      const wrongQuestions = [];
+
+      currentQuestions.forEach(q => {
+        let isCorrect = false;
+
+        if (q.type === 'number') {
+          isCorrect = (userAnswers[q.id] === q.correctValue);
+        } else {
+          const selected = (userAnswers[q.id] || []).sort().join(',');
+          const correct = q.answers
+            .map((a, i) => a.correct ? i : null)
+            .filter(x => x !== null)
+            .sort()
+            .join(',');
+          isCorrect = (selected === correct);
+        }
+
+        if (!isCorrect) {
+          totalFP += q.points;
+          if (q.points === 5) fivePointMistakes++;
+          wrongQuestions.push(q);
+        }
+      });
+
+      return { totalFP, fivePointMistakes, wrongQuestions };
+    }
+
+    function updateErrorPointsBadge() {
+      const { totalFP } = calculateMistakes();
+      const badge = document.getElementById('errorPointsBadge');
+      badge.textContent = `${totalFP} / max. 10`;
+      badge.className = totalFP <= 10 ? "error-points-counter safe" : "error-points-counter danger";
+    }
+
+    function finishExam() {
+      const { totalFP, fivePointMistakes, wrongQuestions } = calculateMistakes();
+
+      wrongQuestions.forEach(wq => {
+        if (!mistakes.some(m => m.id === wq.id)) {
+          mistakes.push(wq);
+        }
+      });
+      localStorage.setItem('fahrschule_mistakes', JSON.stringify(mistakes));
+      document.getElementById('mistakeCount').textContent = mistakes.length;
+
+      const failed = (totalFP > 10) || (totalFP === 10 && fivePointMistakes === 2);
+
+      document.getElementById('questionCard').style.display = "none";
+      const evalCard = document.getElementById('evalCard');
+      evalCard.style.display = "block";
+
+      const banner = document.getElementById('evalBanner');
+      const scoreText = document.getElementById('evalScoreText');
+      const detailText = document.getElementById('evalDetailText');
+
+      if (!failed) {
+        banner.className = "result-banner result-passed";
+        banner.innerHTML = "🎉 HERZLICHEN GLÜCKWUNSCH: THEORIEPRÜFUNG BESTANDEN!";
+        scoreText.textContent = `${totalFP} Fehlerpunkte (Zulässig bis 10 FP)`;
+        scoreText.style.color = "var(--success)";
+        detailText.textContent = "Erstklassige Leistung! Als TÜV-Prüfer kann ich Ihnen bestätigen: Mit diesem Ergebnis hätten Sie die amtliche theoretische Prüfung beim TÜV Süd / DEKRA mit Bravour bestanden.";
+      } else {
+        banner.className = "result-banner result-failed";
+        banner.innerHTML = "❌ LEIDER NICHT BESTANDEN";
+        scoreText.textContent = `${totalFP} Fehlerpunkte`;
+        scoreText.style.color = "var(--danger)";
+        if (totalFP === 10 && fivePointMistakes === 2) {
+          detailText.textContent = "Achtung TÜV-Regel: Sie haben genau 10 Fehlerpunkte, aber ZWEI 5-Punkte-Fragen falsch beantwortet. Daher gilt die Prüfung als nicht bestanden.";
+        } else {
+          detailText.textContent = `Sie haben ${totalFP} Fehlerpunkte gesammelt (maximal 10 sind erlaubt). Wiederholen Sie jetzt gezielt die falsch beantworteten Bild- und Formelfragen!`;
+        }
+      }
+
+      const dots = document.querySelectorAll('.nav-dot');
+      currentQuestions.forEach((q, idx) => {
+        const isWrong = wrongQuestions.some(w => w.id === q.id);
+        dots[idx].className = isWrong ? "nav-dot wrong" : "nav-dot correct";
+      });
+    }
+
+    function reviewExamMistakes() {
+      const { wrongQuestions } = calculateMistakes();
+      if (wrongQuestions.length === 0) {
+        alert("Perfekt! Sie haben gar keine Fehler gemacht.");
+        return;
+      }
+      currentQuestions = wrongQuestions;
+      currentIndex = 0;
+      userAnswers = {};
+      document.getElementById('evalCard').style.display = "none";
+      document.getElementById('questionCard').style.display = "block";
+      document.getElementById('modeLabel').textContent = `Fehler-Überprüfung (${wrongQuestions.length} Fragen)`;
+      document.getElementById('totalQuestionsNum').textContent = wrongQuestions.length;
+      renderNav();
+      renderQuestion();
+      checkCurrentAnswer();
+    }
+
+    function restartExam() {
+      initExam();
+    }
+
+    // ==========================================
+    // VIEWS & SPECIAL TRAILER SECTION
+    // ==========================================
+    function switchView(viewName) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('examView').style.display = "none";
+      document.getElementById('formulasView').style.display = "none";
+      document.getElementById('trainerTopicsView').style.display = "none";
+
+      const targetBtn = document.querySelector(`.tab-btn[data-view="${viewName}"]`);
+      if (targetBtn) {
+        targetBtn.classList.add('active');
+      }
+
+      if (viewName === 'exam') {
+        document.getElementById('examView').style.display = "block";
+        initExam();
+      } else if (viewName === 'trainer') {
+        document.getElementById('trainerTopicsView').style.display = "block";
+      } else if (viewName === 'trailer') {
+        startTopicTraining('Anhänger');
+      } else if (viewName === 'formulas') {
+        document.getElementById('formulasView').style.display = "block";
+      } else if (viewName === 'mistakes') {
+        startMistakesTraining();
+      }
+    }
+
+    function startTopicTraining(cat) {
+      currentQuestions = allQuestions.filter(q => q.category === cat);
+      userAnswers = {};
+      currentIndex = 0;
+      document.getElementById('trainerTopicsView').style.display = "none";
+      document.getElementById('examView').style.display = "block";
+      document.getElementById('modeLabel').textContent = `Thementraining: ${cat} (${currentQuestions.length} Fragen)`;
+      document.getElementById('totalQuestionsNum').textContent = currentQuestions.length;
+      document.getElementById('evalCard').style.display = "none";
+      document.getElementById('questionCard').style.display = "block";
+      renderNav();
+      renderQuestion();
+      updateErrorPointsBadge();
+    }
+
+    function startMistakesTraining() {
+      if (mistakes.length === 0) {
+        alert("Noch keine Fehler gespeichert! Absolvieren Sie zuerst eine Prüfungssimulation.");
+        switchView('exam');
+        return;
+      }
+      currentQuestions = [...mistakes];
+      userAnswers = {};
+      currentIndex = 0;
+      document.getElementById('examView').style.display = "block";
+      document.getElementById('modeLabel').textContent = `Fehler-Wiederholung (${mistakes.length} Fragen)`;
+      document.getElementById('totalQuestionsNum').textContent = mistakes.length;
+      document.getElementById('evalCard').style.display = "none";
+      document.getElementById('questionCard').style.display = "block";
+      renderNav();
+      renderQuestion();
+      updateErrorPointsBadge();
+    }
+
+    function updateCalculator(speed) {
+      speed = parseInt(speed);
+      document.getElementById('sliderSpeedVal').textContent = `${speed} km/h`;
+
+      const reaktion = (speed / 10) * 3;
+      const bremsNormal = (speed / 10) * (speed / 10);
+      const bremsGefahr = bremsNormal / 2;
+      const anhalteweg = reaktion + bremsNormal;
+
+      document.getElementById('calcReaktion').textContent = `${reaktion.toFixed(1)} m`;
+      document.getElementById('calcBremsNormal').textContent = `${bremsNormal.toFixed(1)} m`;
+      document.getElementById('calcBremsGefahr').textContent = `${bremsGefahr.toFixed(1)} m`;
+      document.getElementById('calcAnhalteweg').textContent = `${anhalteweg.toFixed(1)} m`;
+    }
+
+    initExam();
+    updateCalculator(50);
+  </script>
+</body>
+</html>

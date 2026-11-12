@@ -32,13 +32,16 @@
     <header class="app-header">
       <div class="header-top">
         <div class="header-brand">
-          <span class="brand-icon">🩺</span>
+          <img src="icons/icon.svg" class="brand-logo-img" alt="Gesundheit Logo" width="32" height="32" style="border-radius:9px; box-shadow:0 2px 8px rgba(14,165,233,0.35);">
           <div class="brand-text">
             <h1 class="brand-title">Gesundheit</h1>
             <span class="location-badge" title="Regensburg Innenstadt">📍 93047 Regensburg</span>
           </div>
         </div>
         <div class="header-actions">
+          <a href="theorie_pruefung_trainer.html" class="icon-btn" title="TÜV Theorie-Prüfungstrainer" aria-label="Theorie-Trainer" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">
+            <span>🚗</span>
+          </a>
           <button id="btnThemeToggle" class="icon-btn" title="Design anpassen" aria-label="Theme wechseln">
             <span class="theme-icon">🌙</span>
           </button>
@@ -932,6 +935,51 @@
         </div>
       </section>
 
+      <!-- TAB 5: THEORIE-PRÜFUNGSTRAINER -->
+      <section id="tab-theorie" class="tab-view">
+        <div class="card ios-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-size:1.8rem;">🚗</span>
+              <div>
+                <h2 style="font-size:1.15rem; font-weight:800; margin:0; color:#fff;">TÜV Theorie-Trainer Klasse B & Anhänger</h2>
+                <span style="font-size:0.8rem; color:var(--text-muted);">Offizielle Prüfungsfragen 2026 • 30 Fragen Simulation • SVG Bildfragen</span>
+              </div>
+            </div>
+            <a href="theorie_pruefung_trainer.html" class="btn-cal-action primary" style="text-decoration:none; padding:8px 14px; font-size:0.85rem; font-weight:700; border-radius:10px; display:inline-flex; align-items:center; gap:6px;">
+              <span>⛶ Im Vollbild öffnen</span>
+            </a>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px; margin-bottom:14px;">
+            <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px; text-align:center;">
+              <div style="font-size:1.2rem;">📝</div>
+              <strong style="font-size:0.82rem; display:block; margin-top:2px;">30 Prüfungsfragen</strong>
+              <small style="color:var(--text-muted); font-size:0.7rem;">Max. 10 Fehlerpunkte</small>
+            </div>
+            <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px; text-align:center;">
+              <div style="font-size:1.2rem;">🚦</div>
+              <strong style="font-size:0.82rem; display:block; margin-top:2px;">SVG-Vorfahrt</strong>
+              <small style="color:var(--text-muted); font-size:0.7rem;">Cockpit & Vogelperspektive</small>
+            </div>
+            <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px; text-align:center;">
+              <div style="font-size:1.2rem;">🚛</div>
+              <strong style="font-size:0.82rem; display:block; margin-top:2px;">Anhänger Spezial</strong>
+              <small style="color:var(--text-muted); font-size:0.7rem;">3.500 kg, Abreißseil & Stützlast</small>
+            </div>
+            <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px; text-align:center;">
+              <div style="font-size:1.2rem;">📐</div>
+              <strong style="font-size:0.82rem; display:block; margin-top:2px;">Formel-Rechner</strong>
+              <small style="color:var(--text-muted); font-size:0.7rem;">Reaktion, Brems- & Anhalteweg</small>
+            </div>
+          </div>
+
+          <div style="width:100%; height:75vh; border-radius:14px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); background:#090d16; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+            <iframe src="theorie_pruefung_trainer.html" style="width:100%; height:100%; border:none;" title="TÜV Theorie-Trainer"></iframe>
+          </div>
+        </div>
+      </section>
+
     </main>
 
     <!-- Bottom iOS Tab Navigation Bar -->
@@ -951,6 +999,10 @@
       <button class="tab-item" data-tab="export">
         <span class="tab-icon">📑</span>
         <span class="tab-label">Bericht</span>
+      </button>
+      <button class="tab-item" data-tab="theorie">
+        <span class="tab-icon">🚗</span>
+        <span class="tab-label">Theorie</span>
       </button>
     </nav>
 

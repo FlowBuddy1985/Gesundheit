@@ -1,7 +1,8 @@
-const CACHE_NAME = 'gesundheit-app-v9';
+const CACHE_NAME = 'gesundheit-app-v11';
 const ASSETS = [
   './',
   './index.html',
+  './theorie_pruefung_trainer.html',
   './manifest.json',
   './css/style.css',
   './js/db.js',
