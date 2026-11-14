@@ -2,8 +2,17 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>TÜV Theorie-Trainer Klasse B & Anhänger | Offizielle Prüfungsfragen & Bildsimulation 2026</title>
+  
+  <!-- iOS Web App Meta Tags & PWA Setup for iPad Pro & iPhone 12 Pro -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Theorie-Trainer">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#090d16">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -38,18 +47,22 @@
       color: var(--text);
       min-height: 100vh;
       line-height: 1.55;
-      padding-bottom: 60px;
+      padding-bottom: max(60px, calc(30px + env(safe-area-inset-bottom, 20px)));
     }
 
     /* TOP HEADER */
     header {
       background: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--card-border);
       position: sticky;
       top: 0;
       z-index: 100;
-      padding: 0.8rem 1.5rem;
+      padding-top: max(0.8rem, env(safe-area-inset-top, 0.8rem));
+      padding-left: max(1.2rem, env(safe-area-inset-left, 1.2rem));
+      padding-right: max(1.2rem, env(safe-area-inset-right, 1.2rem));
+      padding-bottom: 0.8rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -278,12 +291,15 @@
       border: 1.5px solid var(--card-border);
       border-radius: var(--radius-md);
       padding: 1rem 1.25rem;
+      min-height: 52px;
       display: flex;
       align-items: flex-start;
       gap: 1rem;
       cursor: pointer;
       transition: all 0.15s ease;
       user-select: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
     .answer-item:hover {
       border-color: var(--card-hover);
@@ -392,12 +408,14 @@
       border-radius: var(--radius-sm);
       font-size: 0.92rem;
       font-weight: 700;
+      min-height: 46px;
       border: none;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
       transition: all 0.2s ease;
+      touch-action: manipulation;
     }
     .btn-secondary {
       background: rgba(255, 255, 255, 0.08);
@@ -1805,6 +1823,39 @@
       document.getElementById('calcBremsGefahr').textContent = `${bremsGefahr.toFixed(1)} m`;
       document.getElementById('calcAnhalteweg').textContent = `${anhalteweg.toFixed(1)} m`;
     }
+
+    // Desktop PC Keyboard Shortcuts (1, 2, 3, Enter, Pfeiltasten)
+    window.addEventListener('keydown', (e) => {
+      const examView = document.getElementById('examView');
+      if (!examView || examView.style.display === 'none') return;
+      if (e.target.tagName === 'INPUT' && e.key !== 'Enter') return;
+
+      const q = currentQuestions[currentIndex];
+      if (!q) return;
+
+      if (['1', '2', '3'].includes(e.key) && q.type !== 'number') {
+        const idx = parseInt(e.key) - 1;
+        if (q.answers && idx < q.answers.length) {
+          toggleAnswer(q.id, idx);
+        }
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        const exp = document.getElementById('explanationBox');
+        if (exp && exp.style.display === 'block') {
+          if (currentIndex < currentQuestions.length - 1) {
+            navigateQuestion(1);
+          } else {
+            finishExam();
+          }
+        } else {
+          checkCurrentAnswer();
+        }
+      } else if (e.key === 'ArrowRight') {
+        if (currentIndex < currentQuestions.length - 1) navigateQuestion(1);
+      } else if (e.key === 'ArrowLeft') {
+        if (currentIndex > 0) navigateQuestion(-1);
+      }
+    });
 
     initExam();
     updateCalculator(50);

@@ -39,6 +39,9 @@
           </div>
         </div>
         <div class="header-actions">
+          <button id="btnConnectDevices" class="icon-btn" title="Auf iPad Pro & iPhone verbinden (QR-Code)" aria-label="Geräte verbinden">
+            <span>📲</span>
+          </button>
           <a href="theorie_pruefung_trainer.html" class="icon-btn" title="TÜV Theorie-Prüfungstrainer" aria-label="Theorie-Trainer" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">
             <span>🚗</span>
           </a>
@@ -974,7 +977,7 @@
             </div>
           </div>
 
-          <div style="width:100%; height:75vh; border-radius:14px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); background:#090d16; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+          <div class="theorie-iframe-box" style="width:100%; height:75vh; border-radius:14px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); background:#090d16; box-shadow:0 8px 24px rgba(0,0,0,0.5); -webkit-overflow-scrolling:touch;">
             <iframe src="theorie_pruefung_trainer.html" style="width:100%; height:100%; border:none;" title="TÜV Theorie-Trainer"></iframe>
           </div>
         </div>
@@ -1063,6 +1066,59 @@
           </div>
         </div>
         <div class="printable-report-body" id="printableReportBody"></div>
+      </div>
+    </div>
+
+    <!-- Connect Devices & WLAN Sync Modal (iPad Pro 10.5, iPhone 12 Pro & Desktop PC) -->
+    <div class="modal-overlay" id="connectDevicesModal" style="display: none;">
+      <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h2 style="font-size: 1.2rem; margin: 0; font-weight: 800;">📲 Auf iPad & iPhone nutzen</h2>
+          <button type="button" class="modal-close-btn" id="btnCloseConnectModal">✕</button>
+        </div>
+
+        <div class="qr-card-box">
+          <div class="device-badge-list">
+            <span class="device-badge">iPad Pro 10.5</span>
+            <span class="device-badge">iPhone 12 Pro</span>
+            <span class="device-badge">Desktop PC</span>
+          </div>
+
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 6px 0 10px;">
+            Scannen Sie den QR-Code mit der <strong>Kamera-App</strong> Ihres iPhone oder iPad im selben WLAN:
+          </p>
+
+          <img id="connectQrImg" class="qr-code-img" src="/api/qr" alt="QR-Code zum Öffnen auf iPad & iPhone">
+
+          <div style="margin-top: 8px;">
+            <code id="connectUrlText" style="font-size: 0.95rem; font-weight: 700; color: var(--accent-blue); background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 8px; user-select: all;">
+              http://192.168.0.115:8080
+            </code>
+          </div>
+        </div>
+
+        <div class="card ios-card" style="margin-bottom: 14px; background: rgba(255,255,255,0.03);">
+          <h3 style="font-size: 0.95rem; margin-bottom: 8px;">📱 Als echte iOS-App auf iPad & iPhone installieren:</h3>
+          <ol class="ios-install-steps" style="font-size: 0.84rem; padding-left: 1.2rem; line-height: 1.6;">
+            <li>Link im <strong>Safari Browser</strong> auf dem iPad / iPhone öffnen.</li>
+            <li>Unten auf <strong>Teilen ⬆️</strong> (Viereck mit Pfeil) tippen.</li>
+            <li><strong>„Zum Home-Bildschirm“</strong> auswählen.</li>
+            <li>Die App funktioniert nun wie eine native App und <strong>auch offline</strong>!</li>
+          </ol>
+        </div>
+
+        <div class="card ios-card" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3);">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <div>
+              <strong style="font-size: 0.9rem; color: #34d399; display: block;">🔄 WLAN-Datensynchronisation</strong>
+              <small style="color: var(--text-muted); font-size: 0.78rem;">Tagebucheinträge zwischen PC, iPad und iPhone abgleichen</small>
+            </div>
+            <button id="btnPerformSync" class="btn-cal-action primary" style="font-size: 0.82rem; padding: 6px 12px; white-space: nowrap;">
+              🔄 Jetzt abgleichen
+            </button>
+          </div>
+          <div id="syncStatusMsg" style="font-size: 0.82rem; margin-top: 8px; color: var(--text-muted); display: none;"></div>
+        </div>
       </div>
     </div>
 

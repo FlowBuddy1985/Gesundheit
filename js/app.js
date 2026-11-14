@@ -36,6 +36,7 @@ class SymptomApp {
     this.setupHistoryFilters();
     this.setupAnalytics();
     this.setupExportAndBackup();
+    this.setupDeviceConnect();
     
     // Initialize interactive body map
     window.bodyMapManager.init((selectedRegions) => {
@@ -1903,6 +1904,83 @@ class SymptomApp {
         } catch (err) {
           console.error('Text restore error:', err);
           alert('❌ Fehler beim Verarbeiten des JSON-Textes: ' + err.message);
+        }
+      });
+    }
+  }
+
+  setupDeviceConnect() {
+    const btn = document.getElementById('btnConnectDevices');
+    const modal = document.getElementById('connectDevicesModal');
+    const btnClose = document.getElementById('btnCloseConnectModal');
+    const btnSync = document.getElementById('btnPerformSync');
+    const statusMsg = document.getElementById('syncStatusMsg');
+    const qrImg = document.getElementById('connectQrImg');
+    const urlText = document.getElementById('connectUrlText');
+
+    if (!btn || !modal) return;
+
+    btn.addEventListener('click', async () => {
+      modal.style.display = 'flex';
+      try {
+        const res = await fetch('/api/info');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.networkUrl) {
+            urlText.textContent = data.networkUrl;
+            qrImg.src = '/api/qr?' + Date.now();
+          }
+        }
+      } catch (e) {
+        urlText.textContent = window.location.origin;
+      }
+    });
+
+    if (btnClose) {
+      btnClose.addEventListener('click', () => {
+        modal.style.display = 'none';
+      });
+    }
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.style.display = 'none';
+    });
+
+    if (btnSync) {
+      btnSync.addEventListener('click', async () => {
+        statusMsg.style.display = 'block';
+        statusMsg.style.color = '#38bdf8';
+        statusMsg.textContent = '⏳ Synchronisiere mit Server...';
+
+        try {
+          let serverData = null;
+          try {
+            const checkRes = await fetch('/api/sync');
+            if (checkRes.ok) serverData = await checkRes.json();
+          } catch (e) {}
+
+          if (serverData && serverData.entries) {
+            await window.symptomDB.importFullBackup(serverData);
+          }
+
+          const combined = await window.symptomDB.exportFullBackup();
+
+          const uploadRes = await fetch('/api/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(combined)
+          });
+
+          if (uploadRes.ok) {
+            statusMsg.style.color = '#34d399';
+            statusMsg.textContent = '✅ Daten erfolgreich zwischen Geräten synchronisiert!';
+            await this.loadDateAndProfileData();
+          } else {
+            throw new Error('Server antwortete mit Fehler');
+          }
+        } catch (err) {
+          statusMsg.style.color = '#f87171';
+          statusMsg.textContent = '⚠️ Server nicht erreichbar. Starten Sie "Start_App_Server.bat" auf Ihrem Desktop PC!';
         }
       });
     }

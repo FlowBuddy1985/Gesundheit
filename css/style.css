@@ -2070,3 +2070,66 @@ html, body {
     display: none !important;
   }
 }
+
+/* ==========================================================================
+   Multi-Device Responsive Styles: iPad Pro 10.5, iPhone 12 Pro & Desktop PC
+   ========================================================================== */
+@media (min-width: 834px) {
+  .ios-app {
+    max-width: 920px;
+  }
+  .ios-tab-bar {
+    max-width: 920px;
+  }
+  .theorie-iframe-box {
+    height: 80vh !important;
+  }
+}
+
+@media (min-width: 1112px) {
+  .ios-app {
+    max-width: 1060px;
+  }
+  .ios-tab-bar {
+    max-width: 1060px;
+  }
+  .theorie-iframe-box {
+    height: 84vh !important;
+  }
+}
+
+/* Device Connect & Sync Modal */
+.qr-card-box {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.qr-code-img {
+  width: 190px;
+  height: 190px;
+  background: #ffffff;
+  padding: 10px;
+  border-radius: 14px;
+  margin: 12px auto;
+  display: block;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.device-badge-list {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+.device-badge {
+  background: rgba(14, 165, 233, 0.15);
+  color: var(--accent-blue);
+  border: 1px solid rgba(14, 165, 233, 0.3);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}

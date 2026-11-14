@@ -1,0 +1,224 @@
+{
+  "version": "1.0",
+  "exportedAt": "2026-10-02T16:02:49.185Z",
+  "location": "93047 Regensburg",
+  "profiles": [
+    "human",
+    "buddy",
+    "milla",
+    "bella"
+  ],
+  "entries": [
+    {
+      "profile": "human",
+      "date": "2026-08-14",
+      "weather": {
+        "date": "2026-08-14",
+        "location": "93047 Regensburg",
+        "weatherCode": 0,
+        "condition": "Klarer Himmel / Sonnig",
+        "icon": "☀️",
+        "tempMax": 32.2,
+        "tempMin": 17.7,
+        "tempMean": 25.1,
+        "uvIndex": 0,
+        "uvLevel": "Niedrig",
+        "uvLabel": "Kein Schutz nötig",
+        "uvClass": "uv-low",
+        "pressure": 980,
+        "rain": 0,
+        "wind": 8
+      },
+      "painIntensity": 0,
+      "painJointsIntensity": 0,
+      "painSkinIntensity": 6,
+      "painMorning": "",
+      "painNoon": "",
+      "painEvening": "",
+      "painNight": "",
+      "isMultiDayEpisode": true,
+      "episodeType": "schmerz_schub",
+      "episodeStartDate": "2026-08-14",
+      "episodeEndDate": "2026-08-28",
+      "episodeDurationDays": "2 Wochen",
+      "painTypes": [
+        "stechend",
+        "dumpf",
+        "brennend",
+        "pulsierend",
+        "ziehend",
+        "juckend_schmerz"
+      ],
+      "skinItch": 6,
+      "skinSymptoms": [
+        "rötung",
+        "ausschlag",
+        "schwellung"
+      ],
+      "skinNotes": "Cyndaclin",
+      "heatPhase": "keine",
+      "heatSymptoms": [],
+      "heatNotes": "",
+      "dogLameness": 0,
+      "dogSymptoms": [],
+      "bodyRegions": [
+        "oberschenkel_re_v",
+        "huefte_li_v",
+        "bws_wirbelsaeule",
+        "schulter_li_v",
+        "schulter_re_v"
+      ],
+      "limitationLevel": 5,
+      "limitations": [
+        "gehen",
+        "treppen",
+        "buecken",
+        "sitzen",
+        "stehen",
+        "schlaf",
+        "haushalt",
+        "gassi"
+      ],
+      "medication": "Ibuprofen 800 , tilidin",
+      "treatment": "Zugsalbe Abszess",
+      "notes": "",
+      "adhsLevel": 0,
+      "adhsSymptoms": [],
+      "adhsNotes": "",
+      "photoCount": 0,
+      "photos": [],
+      "id": "human_2026-08-14",
+      "updatedAt": "2026-10-01T20:32:16.982Z"
+    }
+  ],
+  "photos": [],
+  "weather": [
+    {
+      "date": "2025-12-31",
+      "data": {
+        "date": "2025-12-31",
+        "location": "93047 Regensburg",
+        "weatherCode": 71,
+        "condition": "Leichter Schneefall",
+        "icon": "🌨️",
+        "tempMax": 0.1,
+        "tempMin": -9.3,
+        "tempMean": -4.2,
+        "uvIndex": 0,
+        "uvLevel": "Niedrig",
+        "uvLabel": "Kein Schutz nötig",
+        "uvClass": "uv-low",
+        "pressure": 982,
+        "rain": 0.2,
+        "wind": 20
+      },
+      "cachedAt": 1790899867145
+    },
+    {
+      "date": "2026-01-01",
+      "data": {
+        "date": "2026-01-01",
+        "location": "93047 Regensburg",
+        "weatherCode": 3,
+        "condition": "Bedeckt",
+        "icon": "☁️",
+        "tempMax": 1.6,
+        "tempMin": -2.6,
+        "tempMean": -0.2,
+        "uvIndex": 0,
+        "uvLevel": "Niedrig",
+        "uvLabel": "Kein Schutz nötig",
+        "uvClass": "uv-low",
+        "pressure": 970,
+        "rain": 0,
+        "wind": 20
+      },
+      "cachedAt": 1790899831295
+    },
+    {
+      "date": "2026-01-02",
+      "data": {
+        "date": "2026-01-02",
+        "location": "93047 Regensburg",
+        "weatherCode": 73,
+        "condition": "Mäßiger Schneefall",
+        "icon": "🌨️",
+        "tempMax": 2.4,
+        "tempMin": -0.4,
+        "tempMean": 0.7,
+        "uvIndex": 0,
+        "uvLevel": "Niedrig",
+        "uvLabel": "Kein Schutz nötig",
+        "uvClass": "uv-low",
+        "pressure": 961,
+        "rain": 2.3,
+        "wind": 26
+      },
+      "cachedAt": 1790899839613
+    },
+    {
+      "date": "2026-08-14",
+      "data": {
+        "date": "2026-08-14",
+        "location": "93047 Regensburg",
+        "weatherCode": 0,
+        "condition": "Klarer Himmel / Sonnig",
+        "icon": "☀️",
+        "tempMax": 32.2,
+        "tempMin": 17.7,
+        "tempMean": 25.1,
+        "uvIndex": 0,
+        "uvLevel": "Niedrig",
+        "uvLabel": "Kein Schutz nötig",
+        "uvClass": "uv-low",
+        "pressure": 980,
+        "rain": 0,
+        "wind": 8
+      },
+      "cachedAt": 1790886637434
+    },
+    {
+      "date": "2026-10-01",
+      "data": {
+        "date": "2026-10-01",
+        "location": "93047 Regensburg",
+        "weatherCode": 45,
+        "condition": "Nebel",
+        "icon": "🌫️",
+        "tempMax": 24,
+        "tempMin": 5.8,
+        "tempMean": 15,
+        "uvIndex": 3.5,
+        "uvLevel": "Mäßig",
+        "uvLabel": "Sonnenschutz ratsam",
+        "uvClass": "uv-moderate",
+        "pressure": 983,
+        "rain": 0,
+        "wind": 8
+      },
+      "cachedAt": 1790886398236
+    },
+    {
+      "date": "2026-10-02",
+      "data": {
+        "date": "2026-10-02",
+        "location": "93047 Regensburg",
+        "weatherCode": 61,
+        "condition": "Leichter Regen",
+        "icon": "🌧️",
+        "tempMax": 19.3,
+        "tempMin": 12.9,
+        "tempMean": 16,
+        "uvIndex": 2.9,
+        "uvLevel": "Niedrig",
+        "uvLabel": "Kein Schutz nötig",
+        "uvClass": "uv-low",
+        "pressure": 989,
+        "rain": 0.2,
+        "wind": 8
+      },
+      "cachedAt": 1790899808272
+    }
+  ],
+  "serverSavedAt": "2026-11-13T21:33:01.635Z"
+}
